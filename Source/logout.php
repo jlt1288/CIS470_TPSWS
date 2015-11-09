@@ -1,4 +1,5 @@
 <?php require_once('scripts/session.php'); ?>
+<?php require_once('scripts/logout.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
