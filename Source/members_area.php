@@ -1,4 +1,5 @@
 <?php require_once('scripts/session.php'); ?>
+<?php require_once('scripts/members_area_pre.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +14,9 @@
 	
 	
 	<div id="main">	
-		<div id="content"></div>
+		<div id="content">
+        	<?php require_once('scripts/members_area_content.php'); ?>
+        </div>
 	</div>
     
 	<?php include_once('includes/footer.php'); ?>

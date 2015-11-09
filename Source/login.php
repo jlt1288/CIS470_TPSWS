@@ -1,3 +1,4 @@
+<?php require_once('scripts/session.php'); ?>
 <?php require('scripts/login.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
