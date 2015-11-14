@@ -20,12 +20,7 @@ function getButton($page)
 ?>
 
 <img src="resources/tpslogo.png" class="logo" alt="TPS">
-<?php if (isset($_SESSION['login'])){ ?>
-	<a href="logout.php" class="myButton">Logout</a>
-<?php } ?>
-<a href="members_area.php" class="<?php echo getButton("members_area"); ?>">Members</a>
-<?php if (!isset($_SESSION['login'])) { ?>
-<a href="register.php" class="<?php echo getButton("register"); ?>">Register</a>
-<a href="login.php" class="<?php echo getButton("login"); ?>">Login</a>
-<?php } ?>
-<a href="index.php" class="<?php echo getButton("index"); ?>">Home</a>
+<img src="resources/fb.png" class="fblogo" alt="Facebook">
+<img src="resources/twitter.png" class="tlogo" alt="Twitter">
+<img src="resources/google.png" class="glogo" alt="Google">
+<p style="float: right; margin: 0px; margin-right: 65px; margin-top: -6px; font-size: 48px; color:#202020;">Taylor's Professional Services</p>
