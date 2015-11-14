@@ -5,10 +5,13 @@
 *	Creation Date: 11/03/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/03/2015
+*	Modification Date: 11/12/2015
 *----------------------------------------------------------------------------
 */
+if (isset($_GET['logout']))
+{
 	session_start();
     session_destroy();
     header("Location:index.php");
+}
 ?>
