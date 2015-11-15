@@ -30,11 +30,11 @@ if (isset($_POST['submit']) && (isset($_GET['forgotpassword']) or isset($_POST['
 	$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));
 	
 	if (mysqli_num_rows($result)===0){
-		$message = '<h2 style="color:red;">The provided email address is not linked to an account.</h2>';
+		$message = '<h5 style="color:red; margin-top: 10px; margin-left: 8px; margin-right: 8px;">The provided email address is not linked to an account.</h5>';
 	} else {
 		// TODO: Get user based on email, email new password to email address.
 		
-		$message = 'An email has been sent to the email provided. Please check your email for more details.';
+		$message = '<p style="margin: 0px; margin-left: 8px; margin-right: 8px;">An email has been sent to the email provided. Please check your email for more details.</p>';
 	}	
 } elseif (isset($_POST['submit']) && (!isset($_GET['forgotpassword']) or !isset($_POST['forgotpassword']))){
 	// Get information submitted to the page.
@@ -50,7 +50,7 @@ if (isset($_POST['submit']) && (isset($_GET['forgotpassword']) or isset($_POST['
 	$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));
 	
 	if (mysqli_num_rows($result)===0){		
-		$message = ' <h2 style="color:red;">Invalid Credentials!</h2>';
+		$message = ' <h5 style="color:red;  margin-top: 10px; margin-left: 75px;">Invalid Credentials!</h5>';
 	} else {
 		$row = mysqli_fetch_assoc($result);
 	
@@ -78,47 +78,55 @@ if (isset($_POST['submit']) && (isset($_GET['forgotpassword']) or isset($_POST['
     
     <div id="main">	
 		<div id="content">
+			<div id="loginMain">
             <?php
 				if (!isset($_GET['forgotpassword']))
 				{
 					if (isset($message))
 					{
 			?>
-            	<span id="message" name="message"><?php echo $message; ?></span><br \>
             <?php } ?>
-	        <form id="login" name="login" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
-            	<table>
-                	<tr>
-                    	<th><label>Username</label></th>
-                        <th><input id="login" name="login" type="text"></th>
-                    </tr>
-                    <tr>
-                    	<th><label>Password</label></th>
-                        <th><input type="password" id="password" name="password"></th>
-                    </tr>
-                    <tr>
-                    	<th><a href="<?php $_SERVER['PHP_SELF']; ?>?forgotpassword">Forgot Password?</a></th>
-                        <th><input type="submit" id="submit" name="submit" value="Login"></th>
-                    </tr>
-                </table>                
-            </form>
-            <?php } else { 
-				if (isset($message)) {?>
-                    <span id="message" name="message"><?php echo $message; ?></span><br \>
-            <?php } ?>
-            <form id="login" name="forgot" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
-            	<table>
-                	<tr>
-                    	<th><label>Email</label></th>
-                        <th><input id="email" name="email" type="text"></th>
-                    </tr>
-                    <tr>
-                    	<th></th>
-                        <th><input type="submit" id="submit" name="submit" value="Login"></th>
-                    </tr>
-                </table>                
-            </form>            	
-            <?php } ?>
+				<h3 style= "margin-left: 110px; margin-top: 15px; color: #E0E0E0;"><u>Login</u></h3>
+				<form id="login" style="margin-top: 26px;" name="login" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+					<table>
+						<tr>
+							<th><label>Username:</label></th>
+							<th><input id="login" name="login" type="text" style="margin-right: 8px;"></th>
+						</tr>
+						<tr>
+							<th><label style="margin-top: 8px;">Password:</label></th>
+							<th><input type="password" id="password" name="password" style="margin-right: 8px;"></th>
+						</tr>
+						<tr>
+							<th><a href="<?php $_SERVER['PHP_SELF']; ?>?forgotpassword"  style="font-size: 12px;">Forgot Password?</a></th>
+							<th><input type="submit" id="submit" name="submit" value="Login"></th>
+						</tr>
+					</table>                
+				</form>
+				<span id="message" name="message"><?php echo $message; ?></span><br \>
+				<?php } else { 
+					if (isset($message)) {?>
+						
+				<?php } ?>
+				
+				<h3 style= "margin-left: 55px; margin-top: 15px; color: #E0E0E0;"><u>Recover Password</u></h3>
+				<form id="login" style="margin-top: 26px; margin-left: 27px;" name="forgot" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+					<table>
+						<tr>
+							<th><label>Email:</label></th>
+							<th><input id="email" name="email" type="text"></th>
+						</tr>
+					</table>  
+					<table style= "margin-left: 50px; margin-top: 10px;">
+						<tr>
+							<th><input type="submit" style= "float: right; margin: 5px;" id="back" name="back" value="Back"></th>
+							<th><input type="submit" style= "float: left; margin: 5px;" id="submit" name="submit" value="Send"></th>
+						</tr>
+					</table>
+				</form> 
+					<span id="message" name="message"><?php echo $message; ?></span><br \>
+				<?php } ?>
+			</div>
         </div>
 	</div>
     
