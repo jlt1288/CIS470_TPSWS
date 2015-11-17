@@ -9,7 +9,7 @@
 *----------------------------------------------------------------------------
 */
 
-if (isset($_POST['type']) && $_POST['type'] !== "info" && $_POST['type'] != "password")
+if (isset($_POST['type']) && $_POST['type'] !== "info" && $_POST['type'] != "account")
 {
 	// Required for upload purposes.
 	require_once('scripts/upload.php');
@@ -44,31 +44,41 @@ elseif (isset($_POST['type']) && $_POST['type'] === "info")
 	$result = $connection->query($query) or die('Error: ' . mysqli_error( $connection ));
 	
 	if ($result !== 0) { $message = "Information was successfully updated."; } else {$message = "Encountered an error. Information could not be updated."; }
-} elseif (isset($_POST['type']) && $_POST['type'] === "password")
+} elseif (isset($_POST['type']) && $_POST['type'] === "account")
 {
 	if (isset($_POST['current_pwd']))
-	{
+	{		
 		$id = $_SESSION['id'];
 		$pass = md5(trim($_POST['current_pwd']));
 		require_once('scripts/database_admin.php');
 		$query = "SELECT * FROM users WHERE userID='$id' and userPassword='$pass'";
 		$result = $connection->query($query) or die('Error: ' . mysqli_error( $connection ));;
 		$row = mysqli_fetch_row($result);
-	
+		
 		if ($row[0] != NULL && $row[0] != '')
 		{
+			if (isset($_POST['email']))
+			{
+				$email = $_POST['email'];
+				$query = "UPDATE users SET userEmail='$email' WHERE userID='$id'";
+								
+				if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) )){
+					$message = "Email address has been successfully changed.";	
+				}
+			}
+			
 			// Check to see if the password was set.
-			if ($_POST['pwd'] == $_POST['confirm_pwd'])
+			if ((isset($_POST['pwd']) && !empty($_POST['pwd'])) && (isset($_POST['confirm_pwd']) && !empty($_POST['confirm_pwd']) && $_POST['pwd'] == $_POST['confirm_pwd']))
 			{
 				$message = "Password has been successfully changed.";
 				$password = md5(trim($_POST['pwd']));
 				$query = "UPDATE users SET userPassword='$password' WHERE userID='$id'";
 				$connection->query($query) or die('Error: ' . mysqli_error( $connection ));
-			} else if ((isset($_POST['pwd']) && !empty($_POST['pwd'])) && (isset($_POST['confirm_pwd']) && !empty($_POST['confirm_pwd']))){
-
+			} elseif ((isset($_POST['pwd']) && !empty($_POST['pwd'])) && (isset($_POST['confirm_pwd']) && !empty($_POST['confirm_pwd']) && $_POST['pwd'] !== $_POST['confirm_pwd'])) {
+				$message = "Password change was unsuccessful.";
 			}
 		}else {
-			$message = "Password change unsuccessful.<br />Reason: Invalid credentials given.";
+			$message = "Invalid credentials given.";
 		}
 	}
 }

@@ -16,7 +16,7 @@ require_once( 'scripts/database.php' );
 
 // Run query to find if the username/password combination exists.
 // TODO: Change table, values, and variables to be in line with the database.
-$sql = "SELECT * FROM staff WHERE userID = '$id'";
+$sql = "SELECT * FROM staff INNER JOIN users ON staff.userID=users.userID";
 $result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));
 
 if (mysqli_num_rows($result)===0){
@@ -54,15 +54,19 @@ if (isset($message)) { echo '<p id="message" align="center" style="margin:0px; p
 	<input type="submit" value="Upload" name="submit" id="submit" />
 </form><br />
 
-<form action="<?php $_SERVER['PHP_SELF']; ?>?edit" method="POST">
-    <input type="hidden" name="type" value="password" />
+<form id="account" name="account" action="<?php $_SERVER['PHP_SELF']; ?>?edit" method="POST" onsubmit="return checkForm(this);">
+    <input type="hidden" name="type" value="account" />
+    <div id="e_mail" name="e_mail">
+    	<label>E-Mail:</label><br />
+        <input type="email" id="email" name="email" placeholder="E-Mail Address" value="<?php echo $row['userEmail']; ?>" /><br />
+    </div>
     <div id="password" name="password">
 		<label>Current Password:</label><br />
         <input type="password" title="Field cannot be left blank." pattern="\w+" placeholder="Password" id="current_pwd" name="current_pwd" required><br />
     	<label>Password:</label><br />
-        <input placeholder="Password" id="pwd" name="pwd" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"><br />
+        <input placeholder="Password" id="pwd" name="pwd" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"><br />
     	<label>Confirm Password:</label><br />
-        <input title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" id="confirm_pwd" name="confirm_pwd"><br />
+        <input title="Please enter the same Password as above." type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" id="confirm_pwd" name="confirm_pwd"><br />
     </div>
     <input type="submit" id="submit" value="Submit" name="submit" />
 </form><br />
