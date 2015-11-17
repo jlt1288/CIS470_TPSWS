@@ -1,4 +1,4 @@
-<?php if (isset($_POST['edit'])){ ?>
+<?php if (isset($_POST['edit']) || isset($_GET['edit'])){ ?>
 <script type="text/javascript">
 
   document.addEventListener("DOMContentLoaded", function() {
@@ -12,23 +12,28 @@
 
     var checkForm = function(e)
     {
-      if(this.pwd1.value != "" && this.pwd1.value == this.pwd2.value) {
-        if(!checkPassword(this.pwd1.value)) {
-          alert("The password you have entered is not valid!");
-          this.pwd1.focus();
-          e.preventDefault();
-          return;
-        }
+      if(this.pwd.value != "") {
+		if (this.pwd.value == this.confirm_pwd.value){
+	        if(!checkPassword(this.pwd.value)) {
+    	      this.pwd.focus();
+        	  e.preventDefault();
+	          return true;
+			}else{
+				this.pwd.focus();
+		        e.preventDefault();
+				return false;
+			}
+        }else{
+			this.pwd.focus();
+	        e.preventDefault();
+			return false;
+		}
       } else {
-        alert("Error: Please check that you've entered and confirmed your password!");
-        this.pwd1.focus();
-        e.preventDefault();
-        return;
+        return true;
       }
-      alert("Both username and password are VALID!");
     };
 
-    var myForm = document.getElementById("myForm");
+    var myForm = document.getElementById("account");
     myForm.addEventListener("submit", checkForm, true);
 
     // HTML5 form validation
@@ -41,10 +46,10 @@
 
     if(supports_input_validity()) {
       var usernameInput = document.getElementById("current_pwd");
-      usernameInput.setCustomValidity(usernameInput.title);
+      //usernameInput.setCustomValidity(usernameInput.title);
 
       var pwd1Input = document.getElementById("pwd");
-      pwd1Input.setCustomValidity(pwd1Input.title);
+      //pwd1Input.setCustomValidity(pwd1Input.title);
 
       var pwd2Input = document.getElementById("confirm_pwd");
 

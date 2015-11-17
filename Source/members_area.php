@@ -10,7 +10,7 @@ require_once('scripts/logout.php');
 //===============================================================================
 //	SESSION INFORMATION
 //===============================================================================
-if (!isset($_SESSION['access']) || !empty($_SESSION['access']))
+if ((isset($_SESSION['access']) && !empty($_SESSION['access'])))
 {
 	require_once('scripts/' . $_SESSION['access'] . '.php');	
 	
