@@ -9,6 +9,27 @@
 *----------------------------------------------------------------------------
 */
 
+require_once( 'scripts/classes.php' );
+
+if (isset($_POST['view']))
+{
+	$id = $_POST['view'];
+}
+elseif (isset($_GET['view']))
+{
+	$id = $_GET['view'];
+}
+else
+{
+	$id = $_SESSION['id'];
+}
+
+if ($id == $_SESSION['id']){
+	$user = new User($id, "", "populate");
+}
+
+$staff = new Staff($id);
+
 if (isset($_POST['type']) && $_POST['type'] !== "info" && $_POST['type'] != "account")
 {
 	// Required for upload purposes.
@@ -28,41 +49,39 @@ if (isset($_POST['type']) && $_POST['type'] !== "info" && $_POST['type'] != "acc
 elseif (isset($_POST['type']) && $_POST['type'] === "info")
 {
 	$id = $_SESSION['id'];
-	$available = $_POST['available'];
-	$Fname = $_POST['Fname'];
-	$Lname = $_POST['Lname'];
-	$city = $_POST['city'];
-	$state = $_POST['state'];
-	$zip = $_POST['zip'];
-	$workType = $_POST['workType'];
-	$experience = $_POST['experience'];
-	$education = $_POST['education'];
-	$salary = $_POST['salary'];
+	$staff->available = $_POST['available'];
+	$staff->Fname = $_POST['Fname'];
+	$staff->Lname = $_POST['Lname'];
+	$staff->city = $_POST['city'];
+	$staff->state = $_POST['state'];
+	$staff->zip = $_POST['zip'];
+	$staff->workType = $_POST['workType'];
+	$staff->experience = $_POST['experience'];
+	$staff->education = $_POST['education'];
+	$staff->salary = $_POST['salary'];
+		
+	if (!$staff->update()) 
+	{ 
+		$message = "Information was successfully updated."; 
+	}
+	else 
+	{
+		$message = "Encountered an error. Information could not be updated."; 
+	}
 	
-	require_once('scripts/database_admin.php');
-	$query = "UPDATE staff SET available='$available', Fname='$Fname', Lname='$Lname', city='$city', state='$state', zip='$zip', workType='$workType', experience='$experience', education='$education', salary='$salary' WHERE userID=$id";	
-	$result = $connection->query($query) or die('Error: ' . mysqli_error( $connection ));
-	
-	if ($result !== 0) { $message = "Information was successfully updated."; } else {$message = "Encountered an error. Information could not be updated."; }
 } elseif (isset($_POST['type']) && $_POST['type'] === "account")
 {
 	if (isset($_POST['current_pwd']))
 	{		
-		$id = $_SESSION['id'];
-		$pass = md5(trim($_POST['current_pwd']));
-		require_once('scripts/database_admin.php');
-		$query = "SELECT * FROM users WHERE userID='$id' and userPassword='$pass'";
-		$result = $connection->query($query) or die('Error: ' . mysqli_error( $connection ));;
-		$row = mysqli_fetch_row($result);
+		$user = new User($_SESSION['id'], $_POST['current_pwd'], "id");
 		
-		if ($row[0] != NULL && $row[0] != '')
+		if ($user->isLoggedIn)
 		{
 			if (isset($_POST['email']))
 			{
 				$email = $_POST['email'];
-				$query = "UPDATE users SET userEmail='$email' WHERE userID='$id'";
-								
-				if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) )){
+												
+				if ($user->update("Email", trim($_POST['email']))){
 					$message = "Email address has been successfully changed.";	
 				}
 			}
@@ -70,17 +89,32 @@ elseif (isset($_POST['type']) && $_POST['type'] === "info")
 			// Check to see if the password was set.
 			if ((isset($_POST['pwd']) && !empty($_POST['pwd'])) && (isset($_POST['confirm_pwd']) && !empty($_POST['confirm_pwd']) && $_POST['pwd'] == $_POST['confirm_pwd']))
 			{
-				$message = "Password has been successfully changed.";
-				$password = md5(trim($_POST['pwd']));
-				$query = "UPDATE users SET userPassword='$password' WHERE userID='$id'";
-				$connection->query($query) or die('Error: ' . mysqli_error( $connection ));
+				if ($user->update("Password", md5(trim($_POST['pwd']))))
+				{
+					$message = "Password has been successfully changed.";
+				}
 			} elseif ((isset($_POST['pwd']) && !empty($_POST['pwd'])) && (isset($_POST['confirm_pwd']) && !empty($_POST['confirm_pwd']) && $_POST['pwd'] !== $_POST['confirm_pwd'])) {
 				$message = "Password change was unsuccessful.";
 			}
+			
+			$user->refresh();
 		}else {
 			$message = "Invalid credentials given.";
 		}
 	}
+}
+
+function listStates($selected)
+{
+	$states_arr = array('AL'=>"Alabama",'AK'=>"Alaska",'AZ'=>"Arizona",'AR'=>"Arkansas",'CA'=>"California",'CO'=>"Colorado",'CT'=>"Connecticut",'DE'=>"Delaware",'DC'=>"District Of Columbia",'FL'=>"Florida",'GA'=>"Georgia",'HI'=>"Hawaii",'ID'=>"Idaho",'IL'=>"Illinois", 'IN'=>"Indiana", 'IA'=>"Iowa",  'KS'=>"Kansas",'KY'=>"Kentucky",'LA'=>"Louisiana",'ME'=>"Maine",'MD'=>"Maryland", 'MA'=>"Massachusetts",'MI'=>"Michigan",'MN'=>"Minnesota",'MS'=>"Mississippi",'MO'=>"Missouri",'MT'=>"Montana",'NE'=>"Nebraska",'NV'=>"Nevada",'NH'=>"New Hampshire",'NJ'=>"New Jersey",'NM'=>"New Mexico",'NY'=>"New York",'NC'=>"North Carolina",'ND'=>"North Dakota",'OH'=>"Ohio",'OK'=>"Oklahoma", 'OR'=>"Oregon",'PA'=>"Pennsylvania",'RI'=>"Rhode Island",'SC'=>"South Carolina",'SD'=>"South Dakota",'TN'=>"Tennessee",'TX'=>"Texas",'UT'=>"Utah",'VT'=>"Vermont",'VA'=>"Virginia",'WA'=>"Washington",'WV'=>"West Virginia",'WI'=>"Wisconsin",'WY'=>"Wyoming");
+		
+   	$string = '';
+    foreach($states_arr as $k => $v)
+	{
+		$s = (($selected === $k) ? "selected" : "");
+   		$string .= '<option value="'.$k.'" '.$s.'>'.$v.'</option>'."\n";
+	}
+	return $string;
 }
 
 ?>

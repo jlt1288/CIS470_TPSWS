@@ -8,7 +8,7 @@
 *	Modification Date: 11/16/2015
 *----------------------------------------------------------------------------
 */
-	require_once( 'scripts/student_info.php' );
+	require( 'scripts/student_info.php' );
 	$databaseHost = "localhost";
 	$databaseName = $student . "_cis470";
 	$databaseUsername = $student . "_470rdo";

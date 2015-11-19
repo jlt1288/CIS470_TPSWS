@@ -10,8 +10,8 @@
 */
 if (isset($_GET['logout']))
 {
-	session_start();
-    session_destroy();
-    header("Location:index.php");
+	require_once( 'scripts/classes.php' );
+	
+	User::logout();
 }
 ?>
