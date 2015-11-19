@@ -5,63 +5,69 @@
 //===============================================================================
 session_start();
 
-require_once('scripts/logout.php');
+//===============================================================================
+//	Required classes.
+//===============================================================================
+require_once( 'scripts/classes.php' );
+require_once ( 'scripts/logout.php' );
 
+//===============================================================================
+//	INCOMING INFORMATION
+//===============================================================================
 if (isset($_SESSION['access']))
 {
 	// Redirect to members area.
 	header('Location:members_area.php?' . (($_SESSION['access'] === "staff") ? 'view=' . $_SESSION['id'] : ""));
 }
 
-//===============================================================================
-//	INCOMING INFORMATION
-//===============================================================================
 if (isset($_POST['submit']) && (isset($_GET['forgotpassword']) or isset($_POST['forgotpassword'])))
 {
+	$random_hash = md5(uniqid(rand(), true));
+	$new_pass = strtoupper(substr($random_hash, (strlen($random_hash) % 2), 10));
+	
 	// Get information submitted to the page.
-	$email = trim($_POST['email']);
-	
-	// Connect to the database for further use.
-	require_once( 'scripts/database.php' );
-
-	// Run query to find if the username/password combination exists.
-	// TODO: Change table, values, and variables to be in line with the database.
-	$sql = "SELECT * FROM users WHERE userEmail = '$email'";
-	$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));
-	
-	if (mysqli_num_rows($result)===0){
-		$message = '<h5 style="color:red; margin-top: 10px; margin-left: 8px; margin-right: 8px;">The provided email address is not linked to an account.</h5>';
-	} else {
-		// TODO: Get user based on email, email new password to email address.
+	if (User::emailPassword($_POST['email'], $new_pass))
+	{
+		// collect the form valus
+		$email_message = "Thank you for using the automated password retrieval system.\n\n\tPassword:" . $new_pass . "\n\nPlease log into the system using the above password.";
 		
-		$message = '<p style="margin: 0px; margin-left: 8px; margin-right: 8px;">An email has been sent to the email provided. Please check your email for more details.</p>';
-	}	
-} elseif (isset($_POST['submit']) && (!isset($_GET['forgotpassword']) or !isset($_POST['forgotpassword']))){
-	// Get information submitted to the page.
-	$login = trim($_POST['login']);
-	$pwd = md5(trim($_POST['password']));
-
-	// Connect to the database for further use.
-	require_once( 'scripts/database.php' );
-
-	// Run query to find if the username/password combination exists.
-	// TODO: Change table, values, and variables to be in line with the database.
-	$sql = "SELECT * FROM users WHERE userName = '$login' AND userPassword = '$pwd'";
-	$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));
+		// set the email properties
+		$to = $_POST['email'];
+		$subject = "Password reset information.";
+		$from = "support@tps.com";
+		$headers = "From: support@tps.com";
 	
-	if (mysqli_num_rows($result)===0){		
-		$message = ' <h5 style="color:red;  margin-top: 10px; margin-left: 75px;">Invalid Credentials!</h5>';
-	} else {
-		$row = mysqli_fetch_assoc($result);
-	
-		$_SESSION['id'] = $row['userID'];
-		$_SESSION['access'] = $row['userAccess'];
+		// attempt to send the mail, catch errors if they occur
+		try {
+				mail($to, $subject, $email_message, $headers);
+				$message = '<p style="margin: 0px; margin-left: 8px; margin-right: 8px;">An email has been sent to the email provided. Please check your email for more details.</p>';
+		} catch (Exception $e){
+				$message = "An Exception was thrown: " . $e -> getMessage() . "<br>";
+		}
 		
-		// TODO: Push the area which we want to goto as the header:location.
-		header("Location:members_area.php");
 	}
-
+	else
+	{
+		$message = '<h5 style="color:red; margin-top: 10px; margin-left: 8px; margin-right: 8px;">The provided email address is not linked to an account.</h5>';
+	}
 	
+} 
+elseif (isset($_POST['submit']) && (!isset($_GET['forgotpassword']) or !isset($_POST['forgotpassword'])))
+{	
+	// Get information submitted to the page.
+	$user = new User($_POST['login'], $_POST['password'], "");
+	
+	if ($user->isLoggedIn)
+	{
+		$_SESSION['id'] = $user->id;
+		$_SESSION['access'] = $user->access;
+		
+		header('Location:members_area.php?' . (($_SESSION['access'] === "staff") ? 'view=' . $_SESSION['id'] : ""));
+	}
+	else
+	{
+		$message = ' <h5 style="color:red;  margin-top: 10px; margin-left: 75px;">Invalid Credentials!</h5>';
+	}	
 }
 ?>
 <!DOCTYPE html>

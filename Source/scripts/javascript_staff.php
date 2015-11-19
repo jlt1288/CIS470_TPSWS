@@ -14,15 +14,7 @@
     {
       if(this.pwd.value != "") {
 		if (this.pwd.value == this.confirm_pwd.value){
-	        if(!checkPassword(this.pwd.value)) {
-    	      this.pwd.focus();
-        	  e.preventDefault();
-	          return true;
-			}else{
-				this.pwd.focus();
-		        e.preventDefault();
-				return false;
-			}
+	        return true;
         }else{
 			this.pwd.focus();
 	        e.preventDefault();

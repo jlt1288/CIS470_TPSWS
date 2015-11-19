@@ -9,44 +9,16 @@
 *----------------------------------------------------------------------------
 */
 
-$id = $_SESSION['id'];
-
-// Connect to the database for further use.
-require_once( 'scripts/database.php' );
-
-// Run query to find if the username/password combination exists.
-// TODO: Change table, values, and variables to be in line with the database.
-$sql = "SELECT * FROM staff INNER JOIN users ON staff.userID=users.userID";
-$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));
-
-if (mysqli_num_rows($result)===0){
-	$message = "No such users exists.";
-} else {
-	$row = mysqli_fetch_assoc($result);		
-}
-
-function listStates($selected)
-{
-	$states_arr = array('AL'=>"Alabama",'AK'=>"Alaska",'AZ'=>"Arizona",'AR'=>"Arkansas",'CA'=>"California",'CO'=>"Colorado",'CT'=>"Connecticut",'DE'=>"Delaware",'DC'=>"District Of Columbia",'FL'=>"Florida",'GA'=>"Georgia",'HI'=>"Hawaii",'ID'=>"Idaho",'IL'=>"Illinois", 'IN'=>"Indiana", 'IA'=>"Iowa",  'KS'=>"Kansas",'KY'=>"Kentucky",'LA'=>"Louisiana",'ME'=>"Maine",'MD'=>"Maryland", 'MA'=>"Massachusetts",'MI'=>"Michigan",'MN'=>"Minnesota",'MS'=>"Mississippi",'MO'=>"Missouri",'MT'=>"Montana",'NE'=>"Nebraska",'NV'=>"Nevada",'NH'=>"New Hampshire",'NJ'=>"New Jersey",'NM'=>"New Mexico",'NY'=>"New York",'NC'=>"North Carolina",'ND'=>"North Dakota",'OH'=>"Ohio",'OK'=>"Oklahoma", 'OR'=>"Oregon",'PA'=>"Pennsylvania",'RI'=>"Rhode Island",'SC'=>"South Carolina",'SD'=>"South Dakota",'TN'=>"Tennessee",'TX'=>"Texas",'UT'=>"Utah",'VT'=>"Vermont",'VA'=>"Virginia",'WA'=>"Washington",'WV'=>"West Virginia",'WI'=>"Wisconsin",'WY'=>"Wyoming");
-		
-   	$string = '';
-    foreach($states_arr as $k => $v)
-	{
-		$s = (($selected === $k) ? "selected" : "");
-   		$string .= '<option value="'.$k.'" '.$s.'>'.$v.'</option>'."\n";
-	}
-	return $string;
-}
-
-if (isset($message)) { echo '<p id="message" align="center" style="margin:0px; padding-top:2.5px;">' . $message . '</p>'; }?>
+if (isset($message)) { ?>
+<p id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message ?></p><?php ; }?>
 
 <div>
 <form action="?view=<?php echo $_SESSION['id']; ?>" method="POST">
 	<input type="submit" id="submit" name="submit" value="View Profile" />
 </form>
 </div>
-<?php if (isset($row['picture'])){ ?>
-<img id="pic" name="pic" src="uploads/pictures/<?php echo $row['picture']; ?>" /> <?php } ?>
+<?php if (isset($staff->picture)){ ?>
+<img id="pic" name="pic" src="uploads/pictures/<?php echo $staff->picture; ?>" /> <?php } ?>
 <form method="POST" action="<?php $_SERVER["PHP_SELF"]; ?>?edit" enctype="multipart/form-data">
     <input type="hidden" name="type" value="picture" />
     <input type="file" name="picture" id="picture" required/>
@@ -54,11 +26,11 @@ if (isset($message)) { echo '<p id="message" align="center" style="margin:0px; p
 	<input type="submit" value="Upload" name="submit" id="submit" />
 </form><br />
 
-<form id="account" name="account" action="<?php $_SERVER['PHP_SELF']; ?>?edit" method="POST" onsubmit="return checkForm(this);">
+<form id="account" name="account" action="<?php $_SERVER['PHP_SELF']; ?>?edit" method="POST" >
     <input type="hidden" name="type" value="account" />
     <div id="e_mail" name="e_mail">
     	<label>E-Mail:</label><br />
-        <input type="email" id="email" name="email" placeholder="E-Mail Address" value="<?php echo $row['userEmail']; ?>" /><br />
+        <input type="email" id="email" name="email" placeholder="E-Mail Address" value="<?php echo $user->email; ?>" /><br />
     </div>
     <div id="password" name="password">
 		<label>Current Password:</label><br />
@@ -76,39 +48,39 @@ if (isset($message)) { echo '<p id="message" align="center" style="margin:0px; p
 	<div id="availability" name="availability">
     	<label>Availability:</label><br />
         <select id="availabe" name="available">
-        	<option value=0 <?php echo (($row["available"] === "0") ? "selected" : ""); ?>>Not Available</option>
-            <option value=1 <?php echo (($row["available"] === "1") ? "selected" : ""); ?>>Available</option>
+        	<option value=0 <?php echo (($staff->available === "0") ? "selected" : ""); ?>>Not Available</option>
+            <option value=1 <?php echo (($staff->available === "1") ? "selected" : ""); ?>>Available</option>
         </select>
     </div>
 	<div id="information" name="information">
     	<label>First Name:</label><br />
-        <input type="text" id="Fname" name="Fname" value="<?php echo $row['Fname']; ?>" required/><br />
+        <input type="text" id="Fname" name="Fname" value="<?php echo $staff->Fname; ?>" required/><br />
         <label>Last Name:</label><br />
-        <input type="text" id="Lname" name="Lname" value="<?php echo $row['Lname']; ?>" required/><br />
+        <input type="text" id="Lname" name="Lname" value="<?php echo $staff->Lname; ?>" required/><br />
         <label>City:</label><br />
-        <input id="city" name="city" value="<?php echo $row['city']; ?>"  required/><br />
+        <input id="city" name="city" value="<?php echo $staff->city; ?>"  required/><br />
         <label>State:</label><br />
-        <select id="state" name="state" required><option value="0">Choose a state</option><?php echo listStates($row['state']); ?></select><br />
+        <select id="state" name="state" required><option value="0">Choose a state</option><?php echo listStates($staff->state); ?></select><br />
         <label>Zip Code:</label><br />
-        <input type="text" pattern="[0-9]{5}" id="zip" name="zip" value="<?php echo $row['zip']; ?>" required/><br />
+        <input type="text" pattern="[0-9]{5}" id="zip" name="zip" value="<?php echo $staff->zip; ?>" required/><br />
     </div>
     
     <div>
     	<label>Type of Work:</label><br />
         <select id="workType" name="workType" required>
-        	<option value="Professional" <?php echo (($row['workType'] === "Professional") ? "selected" : ""); ?>>Professional</option>
-            <option value="Scientific" <?php echo (($row['workType'] === "Scientific") ? "selected" : ""); ?>>Scientific</option>
+        	<option value="Professional" <?php echo (($staff->workType === "Professional") ? "selected" : ""); ?>>Professional</option>
+            <option value="Scientific" <?php echo (($staff->workType === "Scientific") ? "selected" : ""); ?>>Scientific</option>
         </select><br />
     	<label>Experience:</label><br />
-        <input type="number" pattern="[0-9]{2}" id="experience" name="experience" value="<?php echo $row['experience']; ?>" required /><br />
+        <input type="number" pattern="[0-9]{2}" id="experience" name="experience" value="<?php echo $staff->experience; ?>" required /><br />
         <label>Education:</label><br />
 		<select id="education" name="education" required>
-            <option value="No Degree" <?php echo (($row['education'] === "No Degree") ? "selected" : ""); ?>>No Degree</option>
-            <option value="High School" <?php echo (($row['education'] === "High School") ? "selected" : ""); ?>>High School</option>
-			<option value="College" <?php echo (($row['education'] === "College") ? "selected" : ""); ?>>College</option>
+            <option value="No Degree" <?php echo (($staff->education === "No Degree") ? "selected" : ""); ?>>No Degree</option>
+            <option value="High School" <?php echo (($staff->education === "High School") ? "selected" : ""); ?>>High School</option>
+			<option value="College" <?php echo (($staff->education === "College") ? "selected" : ""); ?>>College</option>
         </select><br />
         <label>Salary:</label><br />
-        <input type="test" pattern="[0-9]*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $row['salary']; ?>" required/>
+        <input type="test" pattern="[0-9]*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $staff->salary; ?>" required/>
     </div>
     
     <div id="submit_form">

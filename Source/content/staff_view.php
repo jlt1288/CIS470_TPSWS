@@ -9,34 +9,8 @@
 *----------------------------------------------------------------------------
 */
 
-if (isset($_POST['view']))
-{
-	$id = $_POST['view'];
-}
-elseif (isset($_GET['view']))
-{
-	$id = $_GET['view'];
-}
-else
-{
-	$id = $_SESSION['id'];
-}
-
-// Connect to the database for further use.
-require_once( 'scripts/database.php' );
-
-// Run query to find if the username/password combination exists.
-// TODO: Change table, values, and variables to be in line with the database.
-$sql = "SELECT * FROM staff WHERE userID = '$id'";
-$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));
-
-if (mysqli_num_rows($result)===0){
-	$message = "No such users exists.";
-} else {
-	$row = mysqli_fetch_assoc($result);		
-}
-
-if (isset($message)) { echo '<p id="message" align="center" style="margin:0px; padding-top:2.5px;">' . $message . '</p>'; }
+if (isset($message)) { ?>
+<p id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message; ?></p> <?php }
 
 if ($_SESSION['id'] === $id) { ?>
 <div>
@@ -46,39 +20,39 @@ if ($_SESSION['id'] === $id) { ?>
 </form>
 </div><?php }
 
- if (isset($row['picture'])){ ?>
-<img id="pic" name="pic" src="uploads/pictures/<?php echo $row['picture']; ?>" /> <?php } ?>
+ if (isset($staff->picture)){ ?>
+<img id="pic" name="pic" src="uploads/pictures/<?php echo $staff->picture; ?>" /> <?php } ?>
 	<div id="availability" name="availability">
     	<label>Availability:</label><br />
-        <label id="availabe" name="available"><?php echo (($row["available"] === "0") ? "Not Available" : "Available"); ?></label>
+        <label id="availabe" name="available"><?php echo (($staff->available === "0") ? "Not Available" : "Available"); ?></label>
     </div>
 
 	<div id="information" name="information">
     	<label>First Name:</label><br />
-        <label id="Fname" name="Fname" ><?php echo $row['Fname']; ?></label><br />
+        <label id="Fname" name="Fname" ><?php echo $staff->Fname; ?></label><br />
         <label>Last Name:</label><br />
-        <label id="Lname" name="Lname"><?php echo $row['Lname']; ?></label><br />
+        <label id="Lname" name="Lname"><?php echo $staff->Lname; ?></label><br />
         <label>City:</label><br />
-        <label id="city" name="city"><?php echo $row['city']; ?></label><br />
+        <label id="city" name="city"><?php echo $staff->city; ?></label><br />
         <label>State:</label><br />
-        <label id="state" name="state"><?php echo $row['state']; ?></label><br />
+        <label id="state" name="state"><?php echo $staff->state; ?></label><br />
         <label>Zip Code:</label><br />
-        <label id="zip" name="zip"><?php echo $row['zip']; ?></label><br />
+        <label id="zip" name="zip"><?php echo $staff->zip; ?></label><br />
     </div>
     
     <div>
     	<label>Type of Work:</label><br />
-        <label id="workType" name="workType"><?php echo $row['workType']; ?></label><br />
+        <label id="workType" name="workType"><?php echo $staff->workType; ?></label><br />
     	<label>Experience:</label><br />
-        <label id="experience" name="experience"><?php echo $row['experience']; ?></label><br />
+        <label id="experience" name="experience"><?php echo $staff->experience; ?></label><br />
         <label>Education:</label><br />
-		<label id="education" name="education"><?php echo $row['education']; ?></label><br />
+		<label id="education" name="education"><?php echo $staff->education; ?></label><br />
         <label>Salary:</label><br />
-        <label id="salary" name="salary"><?php echo $row['salary']; ?></label>
+        <label id="salary" name="salary"><?php echo $staff->salary; ?></label>
     </div>
     
-    <?php if (isset($row['resume']) && !empty($row['resume'])){ ?>
+    <?php if (isset($staff->resume) && !empty($staff->resume)){ ?>
     <div>
     	<label>Resume:</label><br />
-        <a href="uploads/resumes/<?php echo $row['resume']; ?>" target="_blank">Download</a>
+        <a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">Download</a>
    </div><?php } ?>
