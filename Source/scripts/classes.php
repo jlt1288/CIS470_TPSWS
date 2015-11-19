@@ -195,11 +195,16 @@
 			
 			$query = "UPDATE staff SET available='$this->available', Fname='$this->Fname', Lname='$this->Lname', city='$this->city', state='$this->state', zip='$this->zip', workType='$this->workType', experience='$this->experience', education='$this->education', salary='$this->salary' WHERE userID=$this->id";	
 			
-			if (($connection->query($query) or die('Error: ' . mysqli_error( $connection ) )) === 0){
+			if ($connection->query($query) or die('Error: ' . mysqli_error( $connection )) === 0){
 				return true;
 			}
 
 			return false;			
+		}
+		
+		public function refresh()
+		{
+			$this->populate($this->id);
 		}
 		
 		
