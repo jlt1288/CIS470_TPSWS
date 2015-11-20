@@ -5,7 +5,7 @@
 *	Creation Date: 11/13/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/13/2015
+*	Modification Date: 11/20/2015
 *----------------------------------------------------------------------------
 */
 
@@ -72,7 +72,7 @@ if (isset($message)) { ?>
             <option value="Scientific" <?php echo (($staff->workType === "Scientific") ? "selected" : ""); ?>>Scientific</option>
         </select><br />
     	<label>Experience:</label><br />
-        <input type="number" pattern="[0-9]{2}" id="experience" name="experience" value="<?php echo $staff->experience; ?>" required /><br />
+        <input type="number" max="99" min="1.00" id="experience" name="experience" value="<?php echo $staff->experience; ?>" required /><br />
         <label>Education:</label><br />
 		<select id="education" name="education" required>
             <option value="0" <?php echo (($staff->education === "0") ? "selected" : ""); ?>>No Degree</option>
@@ -80,7 +80,7 @@ if (isset($message)) { ?>
 			<option value="2" <?php echo (($staff->education === "2") ? "selected" : ""); ?>>College</option>
         </select><br />
         <label>Salary:</label><br />
-        <input type="text" pattern="[0-9]*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $staff->salary; ?>" required/>
+        <input type="text" pattern="^[1-9]\d*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $staff->salary; ?>" required/>
     </div>
     
     <div id="submit_form">
