@@ -8,7 +8,8 @@
 *	Modification Date: 11/16/2015
 *----------------------------------------------------------------------------
 */
+require_once( 'scripts/classes.php' );
 
-$random_hash = md5(uniqid(rand(), true));
-$confirmation_code = strtoupper(substr($random_hash, (strlen($random_hash) % 2), 10));
+//$random_hash = md5(uniqid(rand(), true));
+//$confirmation_code = strtoupper(substr($random_hash, (strlen($random_hash) % 2), 10));
 ?>

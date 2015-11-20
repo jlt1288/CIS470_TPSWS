@@ -1,107 +1,76 @@
-<?php
-function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
-    $sort_col = array();
-    foreach ($arr as $key=> $row) {
-        $sort_col[$key] = $row[$col];
-    }
-    array_multisort($sort_col, $dir, $arr);
-}
-?>
-<p style="margin:0px; padding-top:2.5px;">
-        <form action="<?php echo htmlentities($_SERVER['PHP_SELF'] . "?request"); ?>" method="post" name="zipform">
-            <label>Enter your ZIP Code: <input type="text" name="zipcode" size="6" maxlength="5" value="<?php echo $_POST['zipcode']; ?>" /></label>
-            <br />
-            <label>Select a distance in miles from this point:</label>
-            <select name="distance">
-                <option<?php if($_POST['distance'] == "5") { echo " selected=\"selected\""; } ?>>5</option>
-                <option<?php if($_POST['distance'] == "10") { echo " selected=\"selected\""; } ?>>10</option>
-                <option<?php if($_POST['distance'] == "25") { echo " selected=\"selected\""; } ?>>25</option>
-                <option<?php if($_POST['distance'] == "50") { echo " selected=\"selected\""; } ?>>50</option>
-                <option<?php if($_POST['distance'] == "100") { echo " selected=\"selected\""; } ?>>100</option>
-            </select>
-            <br />
-            <input type="submit" name="submit" value="Submit" />
-        </form>
-        <br />
-        <?php
-			if(isset($_POST['submit'])) {
-				if(!preg_match('/^[0-9]{5}$/', $_POST['zipcode'])) {
-					echo "<p><strong>You did not enter a properly formatted ZIP Code.</strong> Please try again.</p>\n";
-				}
-				elseif(!preg_match('/^[0-9]{1,3}$/', $_POST['distance'])) {
-					echo "<p><strong>You did not enter a properly formatted distance.</strong> Please try again.</p>\n";
-				}
-				else {
-					//connect to db server; select database
-					require_once('scripts/database.php');
-					
-					//query for coordinates of provided ZIP Code
-					if(!$rs = $connection->query("SELECT * FROM zipcodes WHERE code = '$_POST[zipcode]'")) {
-						echo "<p><strong>There was a database error attempting to retrieve your ZIP Code.</strong> Please try again.</p>\n";
-					}
-					else {
-						if(mysqli_num_rows($rs) == 0) {
-							echo "<p><strong>No database match for provided ZIP Code.</strong> Please enter a new ZIP Code.</p>\n";	
-						}
-						else {
-							//if found, set variables
-							$row = mysqli_fetch_array($rs);
-							$lat1 = $row['latitude'];
-							$lon1 = $row['longitude'];
-							$d = $_POST['distance'];
-							$r = 3959;
-							
-							//compute max and min latitudes / longitudes for search square
-							$latN = rad2deg(asin(sin(deg2rad($lat1)) * cos($d / $r) + cos(deg2rad($lat1)) * sin($d / $r) * cos(deg2rad(0))));
-							$latS = rad2deg(asin(sin(deg2rad($lat1)) * cos($d / $r) + cos(deg2rad($lat1)) * sin($d / $r) * cos(deg2rad(180))));
-							$lonE = rad2deg(deg2rad($lon1) + atan2(sin(deg2rad(90)) * sin($d / $r) * cos(deg2rad($lat1)), cos($d / $r) - sin(deg2rad($lat1)) * sin(deg2rad($latN))));
-							$lonW = rad2deg(deg2rad($lon1) + atan2(sin(deg2rad(270)) * sin($d / $r) * cos(deg2rad($lat1)), cos($d / $r) - sin(deg2rad($lat1)) * sin(deg2rad($latN))));
-							
-							//display information about starting point
-							//provide max and min latitudes / longitudes
-							echo "<table class=\"bordered\" cellspacing=\"0\">\n";
-							echo "<tr><th>City</th><th>State</th><th>Lat</th><th>Lon</th><th>Max Lat (N)</th><th>Min Lat (S)</th><th>Max Lon (E)</th><th>Min Lon (W)</th></tr>\n";
-							echo "<tr><td>$row[city]</td><td>$row[state]</td><td>$lat1</td><td>$lon1</td><td>$latN</td><td>$latS</td><td>$lonE</td><td>$lonW</td></tr>\n";
-							echo "</table>\n<br />\n";
-							
-							//find all coordinates within the search square's area
-							//exclude the starting point and any empty city values
-							$query = "SELECT * FROM zipcodes WHERE (latitude <= $latN AND latitude >= $latS AND longitude <= $lonE AND longitude >= $lonW) AND (latitude != $lat1 AND longitude != $lon1) AND city != '' ORDER BY state, city, latitude, longitude";
-							if(!$rs = $connection->query($query)) {
-								echo "<p><strong>There was an error selecting nearby ZIP Codes from the database.</strong></p>\n";
-							}
-							elseif(mysqli_num_rows($rs) == 0) {
-								echo "<p><strong>No nearby ZIP Codes located within the distance specified.</strong> Please try a different distance.</p>\n";								
-							}
-							else {
-								//output all matches to screen
-								echo "<table class=\"bordered\" cellspacing=\"0\">\n";
-								echo "<tr><th>City</th><th>State</th><th>ZIP Code</th><th>Latitude</th><th>Longitude</th><th>Miles, Point A To B</th></tr>\n";
-								$tmp = array();
-								$i = 0;
-								
-								while($row = mysqli_fetch_array($rs)) {
-									$distance = round(acos(sin(deg2rad($lat1)) * sin(deg2rad($row['latitude'])) + cos(deg2rad($lat1)) * cos(deg2rad($row['latitude'])) * cos(deg2rad($row['longitude']) - deg2rad($lon1))) * $r);
-									if($d >= $distance) {
-										$tmp[$i] = $row;
-										$tmp[$i]['distance'] = $distance;
-										$i++;
-									}
-								}
-								
-								//now we can sort the temp array via the function at the top of the page
-								array_sort_by_column($tmp, 'distance');
-								
-								foreach($tmp as $data) {
-									echo "<tr><td>$data[city]</td><td>$data[state]</td><td>$data[zip_code]</td><td>$data[latitude]</td><td>$data[longitude]</td><td>$data[distance]</td></tr>\n";	
-								}
-								while($row = mysqli_fetch_array($rs)) {
-									
-								}
-								echo "</table>\n<br />\n";
-							}
-						}
-					}
+<form action="<?php echo htmlentities($_SERVER['PHP_SELF'] . "?request"); ?>" method="POST" name="form1">
+	<div>
+    	<label>Type of Work:</label>
+        <select id="workType" name="workType" required>
+        	<option value="Professional" <?php echo (($_POST['workType'] === "Professional") ? "selected" : ""); ?>>Professional</option>
+            <option value="Scientific" <?php echo (($_POST['workType'] === "Scientific") ? "selected" : ""); ?>>Scientific</option>
+        </select><br />
+        <label>Experience:</label>
+        <input type="number" id="experience" name="experience" value="<?php echo $_POST['experience']; ?>" required/><br />
+        <label>Education:</label>
+        <select id="education" name="education" required>
+        	<option value="0" <?php echo (($_POST['education'] === "0") ? "selected" : ""); ?>>No Degree</option>
+            <option value="1" <?php echo (($_POST['education'] === "1") ? "selected" : ""); ?>>High School</option>
+            <option value="2" <?php echo (($_POST['education'] === "2") ? "selected" : ""); ?>>College</option>
+        </select><br />
+        <label>Salary:</label>
+        <input type="text" pattern="[0-9]*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $_POST['salary']; ?>" required/><br />
+        <label>Zip Code:</label>
+        <input type="text" pattern="[0-9]{5}" id="zip" name="zip" value="<?php echo $_POST['zip']; ?>" required/><br />
+        <label>Search Distance:</label>
+        <select name="distance">
+            <option value="5" <?php if($_POST['distance'] == "5") { echo "selected"; } ?>>5</option>
+            <option value="10" <?php if($_POST['distance'] == "10") { echo "selected"; } ?>>10</option>
+            <option value="25" <?php if($_POST['distance'] == "25") { echo "selected"; } ?>>25</option>
+            <option value="50" <?php if($_POST['distance'] == "50") { echo "selected"; } ?>>50</option>
+        	<option value="100" <?php if($_POST['distance'] == "100") { echo "selected"; } ?>>100</option>
+		</select><br />
+        <input type="submit" name="search" id="search" value="Search" />
+	</div>
+
+	<div>
+    	<!-- TODO: Create the select for the potential candidates. -->
+        
+	    <?php
+		    if ($_POST['search'])
+			{
+				// Get the list of potential candidates.
+				if (($candidates = Client::search($_POST['workType'], $_POST['experience'], $_POST['education'], $_POST['salary'], $_POST['zip'], $_POST['distance'])) !== false && count($candidates) >= 1)
+				{ 
+				?>
+				<div id="potential_candidates">
+					<?php 
+					$i = 0;
+					foreach ($candidates as $row)
+					{ 
+						$staff = new Staff($row['userID']);?>
+                    <div id="candidate<?php echo $i; ?>" onclick='selectCandidate(<?php echo $i; ?>)'>
+                    	<?php if (!empty($staff->picture)){ ?>
+							<img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br />
+	                     <?php }?>
+                         <input type="hidden" value="<?php echo $staff->id; ?>" />
+                        <label><?php echo $staff->Fname . " " . $staff->Lname; ?></label><br />
+                        <label>Experience: <?php echo $staff->experience; ?> Year(s)</label><br />
+                        <label>Education: <?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College" ); ?></label><br />
+                        <label>Desired Salary: <?php echo $staff->salary; ?></label><br />
+    	                <input type="checkbox" name='candidates' onclick='selectCandidate(<?php echo $i; ?>)' value="Select"/>
+                    </div>
+					<?php $i++; }?>					
+                </div>
+				<?php }
+				else 
+				{
+					echo $GLOBALS['message'];
 				}
 			}
-		?></p>
+			
+			
+		?>
+        
+    </div>
+    
+    
+	<div>
+    	<input type="submit" name="submit" id="submit" value="Submit" />
+    </div>
+</form>

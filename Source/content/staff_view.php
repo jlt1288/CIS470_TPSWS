@@ -46,7 +46,7 @@ if ($_SESSION['id'] === $id) { ?>
     	<label>Experience:</label><br />
         <label id="experience" name="experience"><?php echo $staff->experience; ?></label><br />
         <label>Education:</label><br />
-		<label id="education" name="education"><?php echo $staff->education; ?></label><br />
+		<label id="education" name="education"><?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College" ); ?></label><br />
         <label>Salary:</label><br />
         <label id="salary" name="salary"><?php echo $staff->salary; ?></label>
     </div>
