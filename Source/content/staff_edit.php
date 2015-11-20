@@ -75,12 +75,12 @@ if (isset($message)) { ?>
         <input type="number" pattern="[0-9]{2}" id="experience" name="experience" value="<?php echo $staff->experience; ?>" required /><br />
         <label>Education:</label><br />
 		<select id="education" name="education" required>
-            <option value="No Degree" <?php echo (($staff->education === "No Degree") ? "selected" : ""); ?>>No Degree</option>
-            <option value="High School" <?php echo (($staff->education === "High School") ? "selected" : ""); ?>>High School</option>
-			<option value="College" <?php echo (($staff->education === "College") ? "selected" : ""); ?>>College</option>
+            <option value="0" <?php echo (($staff->education === "0") ? "selected" : ""); ?>>No Degree</option>
+            <option value="1" <?php echo (($staff->education === "1") ? "selected" : ""); ?>>High School</option>
+			<option value="2" <?php echo (($staff->education === "2") ? "selected" : ""); ?>>College</option>
         </select><br />
         <label>Salary:</label><br />
-        <input type="test" pattern="[0-9]*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $staff->salary; ?>" required/>
+        <input type="text" pattern="[0-9]*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $staff->salary; ?>" required/>
     </div>
     
     <div id="submit_form">

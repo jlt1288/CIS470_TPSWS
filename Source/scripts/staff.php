@@ -60,7 +60,7 @@ elseif (isset($_POST['type']) && $_POST['type'] === "info")
 	$staff->education = $_POST['education'];
 	$staff->salary = $_POST['salary'];
 		
-	if (!$staff->update()) 
+	if ($staff->update()) 
 	{ 
 		$message = "Information was successfully updated."; 
 	}

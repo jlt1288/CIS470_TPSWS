@@ -1,5 +1,12 @@
 <?php
-
+	function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
+    	$sort_col = array();
+		foreach ($arr as $key=> $row) {
+    		$sort_col[$key] = $row[$col];
+		}
+		array_multisort($sort_col, $dir, $arr);
+	}
+	
 	class User {
 				
 		public function __construct($user, $pass, $type)
@@ -194,12 +201,9 @@
 			require_once('scripts/database_admin.php');
 			
 			$query = "UPDATE staff SET available='$this->available', Fname='$this->Fname', Lname='$this->Lname', city='$this->city', state='$this->state', zip='$this->zip', workType='$this->workType', experience='$this->experience', education='$this->education', salary='$this->salary' WHERE userID=$this->id";	
-			
-			if ($connection->query($query) or die('Error: ' . mysqli_error( $connection )) === 0){
-				return true;
-			}
+			$connection->query($query) or die('Error: ' . mysqli_error( $connection ));
 
-			return false;			
+			return true;			
 		}
 		
 		public function refresh()
@@ -208,6 +212,134 @@
 		}
 		
 		
+	}
+	
+	
+	class Client {
+	
+	
+		
+		
+		public static function getZipCodes($code, $distance)
+		{
+			//connect to db server; select database
+			require('scripts/database.php');
+					
+			//query for coordinates of provided ZIP Code
+			if(!$rs = $connection->query("SELECT * FROM zipcodes WHERE code = '$code'")) {
+				$GLOBALS['message'] = "Database error.";
+				return false;
+			}
+			else {
+				if(mysqli_num_rows($rs) == 0) {
+					$GLOBALS['message'] = "No zip codes found.";
+					return false;
+				}
+				else {
+					//if found, set variables
+					$row = mysqli_fetch_array($rs);
+					$lat1 = $row['latitude'];
+					$lon1 = $row['longitude'];
+					$d = $distance;
+					$r = 3959;
+							
+					//compute max and min latitudes / longitudes for search square
+					$latN = rad2deg(asin(sin(deg2rad($lat1)) * cos($d / $r) + cos(deg2rad($lat1)) * sin($d / $r) * cos(deg2rad(0))));
+					$latS = rad2deg(asin(sin(deg2rad($lat1)) * cos($d / $r) + cos(deg2rad($lat1)) * sin($d / $r) * cos(deg2rad(180))));
+					$lonE = rad2deg(deg2rad($lon1) + atan2(sin(deg2rad(90)) * sin($d / $r) * cos(deg2rad($lat1)), cos($d / $r) - sin(deg2rad($lat1)) * sin(deg2rad($latN))));
+					$lonW = rad2deg(deg2rad($lon1) + atan2(sin(deg2rad(270)) * sin($d / $r) * cos(deg2rad($lat1)), cos($d / $r) - sin(deg2rad($lat1)) * sin(deg2rad($latN))));
+					
+					//find all coordinates within the search square's area
+					//exclude the starting point and any empty city values
+					$query = "SELECT * FROM zipcodes WHERE (latitude <= $latN AND latitude >= $latS AND longitude <= $lonE AND longitude >= $lonW) AND (latitude != $lat1 AND longitude != $lon1) AND city != '' ORDER BY state, city, latitude, longitude";
+					if(!$rs = $connection->query($query)) {
+						$GLOBALS['message'] = "Database error while searching for zip codes in area.";
+						return false;
+					}
+					elseif(mysqli_num_rows($rs) == 0) {
+						$GLOBALS['message'] = "No zip codes found within that distance.";
+						return false;
+					}
+					else {
+						//output all matches to array to be used to search for people in the area.
+						$tmp = array();
+						$i = 0;
+								
+						while($row = mysqli_fetch_array($rs)) {
+							$distance = round(acos(sin(deg2rad($lat1)) * sin(deg2rad($row['latitude'])) + cos(deg2rad($lat1)) * cos(deg2rad($row['latitude'])) * cos(deg2rad($row['longitude']) - deg2rad($lon1))) * $r);
+							if($d >= $distance) {
+								$tmp[$i] = $row;
+								$tmp[$i]['distance'] = $distance;
+								$i++;
+							}
+						}								
+						//now we can sort the temp array via the function at the top of the page
+						array_sort_by_column($tmp, 'distance');
+						
+						return $tmp;
+					}
+				}
+			}
+		}
+	
+		public static function Search($workType, $experience, $education, $salary, $zip, $distance)
+		{
+			if (($tmp = Client::getZipCodes($zip, $distance)) !== false)
+			{
+				//connect to db server; select database
+				require('scripts/database.php');
+				
+				$i = 0;
+				$query = "SELECT * FROM staff WHERE (";		
+				foreach($tmp as $data) 
+				{
+					if ($i === 0)
+					{
+						$query .= "zip='" . $data[code]. "'";	
+					}
+					else
+					{
+						$query .= " OR zip='" . $data[code] . "'";	
+					}	
+					$i++;				
+				}
+				$query .= ") AND experience >= '$experience' AND workType='$workType' AND education>='$education' AND salary<='$salary' AND available=1";
+				
+				$GLOBALS['query'] = $query;
+				
+				if(!$rs = $connection->query($query)) {
+					$GLOBALS['message'] = "No potential candidates fit that criteria.";
+					return false;	
+				}
+				else
+				{
+					$tmp = array();
+					$i = 0;
+					
+					while($row = mysqli_fetch_array($rs)) {
+						$tmp[$i] = $row;
+						$i++;
+					}
+					
+					if ($i !== 0)
+					{
+						array_sort_by_column($tmp, 'experience');
+
+						return $tmp;
+					}
+					else
+					{
+						$GLOBALS['message'] = "No potential candidates fit that criteria.";
+						
+						return false;
+					}
+				}						
+			}
+			else
+			{
+				return false;
+			}
+		}		
 	}
 
 ?>
