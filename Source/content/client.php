@@ -1,13 +1,12 @@
 <?php
 
-	if (isset($_POST['request']) || isset($_GET['request']))
+	if (isset($_POST['view']) || isset($_GET['view']))
 	{
-		require_once('content/client_request.php');
-		
+		require_once('content/client_viewrequest.php');	
 	}
 	else
 	{
-		require_once('content/client_viewrequest.php');	
+		require_once('content/client_request.php');
 	}
 
 ?>

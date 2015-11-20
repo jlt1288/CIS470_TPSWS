@@ -1,4 +1,13 @@
 <?php
+/*	Upload component used to upload pictures and resumes to the server.
+*----------------------------------------------------------------------------
+*	Original Author: Joshua Thompson
+*	Creation Date: 11/13/2015
+*
+*	Modification Author: Joshua Thompson
+*	Modification Date: 11/20/2015
+*----------------------------------------------------------------------------
+*/
 
 if (isset($_POST['type']) && $_POST['type'] === "picture" && !empty($_FILES))
 {

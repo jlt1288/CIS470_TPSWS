@@ -1,4 +1,13 @@
 <?php
+/*	Classes which will be used by various pages.
+*----------------------------------------------------------------------------
+*	Original Author: Joshua Thompson
+*	Creation Date: 11/17/2015
+*
+*	Modification Author: Joshua Thompson
+*	Modification Date: 11/20/2015
+*----------------------------------------------------------------------------
+*/
 	function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
     	$sort_col = array();
 		foreach ($arr as $key=> $row) {
@@ -214,11 +223,108 @@
 		
 	}
 	
+	class Request{
+		public function __construct($row)
+		{
+			$this->id = $row['staffRequestID'];
+			$this->userID = $row['userID'];
+			$this->workType = $row['workType'];
+			$this->experience = $row['experience'];
+			$this->education = $row['education'];
+			$this->salary = $row['salary'];
+			$this->zip = $row['zipcode'];
+			$this->distance = $row['distance'];
+			$this->status = $row['status'];
+			$this->dateOpened = $row['dateOpened'];
+			$this->approvalNumber = $row['approvalNumber'];
+		}
+		
+		public $id;
+		public $userID;
+		public $workType;
+		public $experience;
+		public $education;
+		public $salary;
+		public $zip;
+		public $distance;
+		public $status;
+		public $dateOpened;
+		public $approvalNumber;
+		
+		
+		public function getCandidates()
+		{
+			//connect to db server; select database
+			require('scripts/database.php');
+			
+			$query = "SELECT * FROM candidate WHERE staffRequestID='$this->id'";
+			if (!$result = $connection->query($query))
+			{
+				return false;
+			}
+			
+			$tmp = array();
+			$i = 0;
+								
+			while($row = mysqli_fetch_array($result)) {
+				$tmp[$i] = $row;
+				$i++;	
+			}								
+			
+			//now we can sort the temp array via the function at the top of the page
+			array_sort_by_column($tmp, 'staffID');
+			
+			return $tmp;
+		}
+	}
+	
 	
 	class Client {
+				
+		public static function getRequest($id, $approval_code)
+		{
+			//connect to db server; select database
+			require('scripts/database.php');
+			
+			$query = "SELECT * FROM staffrequest WHERE userID='$id' AND approvalNumber='$approval_code'";
+			
+			if (!$rs = $connection->query($query))
+			{
+				return false;
+			}
+			$row = mysqli_fetch_array($rs);
+			return new Request($row);			
+		}
 	
-	
-		
+		public static function createRequest($id, $workType, $experience, $education, $salary, $zip, $distance, $potential_candidates)
+		{
+			$random_hash = md5(uniqid(rand(), true));			
+			$app_num =  strtoupper(substr($random_hash, (strlen($random_hash) % 2), 10));
+			
+			//connect to db server; select database
+			require('scripts/database_admin.php');
+			$status = "VALID";
+			$date = date('Y-m-d');
+			
+			$query = "INSERT INTO staffrequest (userID, workType, experience, education, salary, zipcode, distance, status, dateOpened, approvalNumber) VALUES ('$id', '$workType', '$experience', '$education', '$salary', '$zip', '$distance', '$status', '$date', '$app_num')";			
+			$connection->query($query);
+						
+			if (!$request = Client::getRequest($id, $app_num))
+			{
+				return false;		
+			}
+			
+			foreach ($potential_candidates as $candidate)
+			{
+				//connect to db server; select database
+				require('scripts/database_admin.php');
+					
+				$query = "INSERT INTO candidate (staffRequestID, staffID) VALUES ($request->id, $candidate)";
+				$connection->query($query);		
+			}	
+				
+			return $app_num;	
+		}		
 		
 		public static function getZipCodes($code, $distance)
 		{

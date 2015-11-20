@@ -1,4 +1,14 @@
-<?php if (isset($_POST['edit']) || isset($_GET['edit'])){ ?>
+<?php
+/*	Javascript for the staff area.
+*----------------------------------------------------------------------------
+*	Original Author: Joshua Thompson
+*	Creation Date: 11/13/2015
+*
+*	Modification Author: Joshua Thompson
+*	Modification Date: 11/20/2015
+*----------------------------------------------------------------------------
+*/
+ if (isset($_POST['edit']) || isset($_GET['edit'])){ ?>
 <script type="text/javascript">
 
   document.addEventListener("DOMContentLoaded", function() {
