@@ -33,7 +33,7 @@ else{
     	<label>Work Type: </label>
         <label id="workType" name="workType"><?php echo $request->workType; ?></label><br />
     	<label>Desired Experience: </label>
-        <label id="experience" name="experience"><?php echo $request->experience; ?></label><br />
+        <label id="experience" name="experience"><?php echo $request->experience . " Year(s)";; ?></label><br />
         <label>Desired Education: </label>
         <label id="eduation" name="education"><?php echo (($request->education === "0") ? "No Degree" : ($request->education === "1") ? "High School" : "College"); ?></label><br />
    	    <label>Location: </label>
@@ -58,7 +58,7 @@ else{
                     	<?php if (!empty($staff->picture)) { ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php } ?>
                 		<label><?php echo $staff->Fname . " " . $staff->Lname; ?></label><br />
 	                    <label><?php echo $staff->city . ", " . $staff->state . " " . $staff->zip;?></label><br />
-    	                <label>Experience: <?php echo $staff->experience . " Years"; ?></label><br />
+    	                <label>Experience: <?php echo $staff->experience . " Year(s)"; ?></label><br />
         	            <label>Education: <?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College"); ?></label><br />
             	        <label>Salary: <?php echo "$" . $staff->salary; ?></label>
                 	    <?php

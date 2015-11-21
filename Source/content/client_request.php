@@ -55,13 +55,16 @@ else{
 				if (($candidates = Client::search($_POST['workType'], $_POST['experience'], $_POST['education'], $_POST['salary'], $_POST['zip'], $_POST['distance'])) !== false && count($candidates) >= 1)
 				{ 
 				?>
-				<div id="potential_candidates">
+				<table>
+	                <tr>
 					<?php 
 					$i = 0;
 					foreach ($candidates as $row)
 					{ 
+						if ($i % 3 === 0) { echo '</tr><tr>'; }
+						
 						$staff = new Staff($row['userID']);?>
-                    <div id="candidate<?php echo $i; ?>" onclick='selectCandidate(<?php echo $i; ?>)'>
+                        <th>                    
                     	<?php if (!empty($staff->picture)){ ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php }?>
                         <label><?php echo $staff->Fname . " " . $staff->Lname; ?></label><br />
                         <label>Experience: <?php echo $staff->experience; ?> Year(s)</label><br />
@@ -69,9 +72,10 @@ else{
                         <label>Desired Salary: $<?php echo $staff->salary; ?></label><br />
                         <?php if (!empty($staff->resume)) { ?><a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">View Resume</a><br /><?php } ?>
     	                <input type="checkbox" id="candidates[]" name='candidates[]' onclick='selectCandidate(<?php echo $i; ?>)' value="<?php echo $staff->id; ?>"/>
-                    </div>
-					<?php $i++; }?>					
-                </div>
+                        </th>
+					<?php $i++; }?>
+                    </tr>					
+                </table>
 				<?php }
 				else 
 				{
