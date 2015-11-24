@@ -80,7 +80,7 @@ else{
 					
 						if ($i % 3 === 0) { echo '</tr><tr>'; }
 						
-						if (in_array($candidates->data[$i]['userID'], $_POST['candidates'])) { continue; }
+						if (!empty($_POST['candidates']) && in_array($candidates->data[$i]['userID'], $_POST['candidates'])) { continue; }
 							
 						$staff = new Staff($candidates->data[$i]['userID']);?>
                         <th>                    

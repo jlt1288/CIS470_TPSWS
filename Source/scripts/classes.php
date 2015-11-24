@@ -296,7 +296,7 @@
 			$this->_total = $rs->num_rows;
 		}
 		
-		public function getData($page = 1, $limit = 9)
+		public function getData($page = 1, $limit = 2)
 		{
 			//connect to db server; select database
 			require('scripts/database.php');
@@ -345,8 +345,8 @@
 			}
 		
 			for ( $i = $start ; $i <= $end; $i++ ) {
-				$class  = ( $this->_page == $i ) ? "active" : "";
-				$html   .= '<li class="' . $class . '"><input type="submit" id="page" name="page" value="' . $i . '" /></li>';
+				$class  = ( $this->_page != $i ) ? "active" : "disabled";
+				$html   .= '<li class="' . $class . '"><input '. (($class == "active") ? "" : "disabled" ). ' type="submit" id="page" name="page" value="' . $i . '" /></li>';
 			}
 		
 			if ( $end < $last ) {
