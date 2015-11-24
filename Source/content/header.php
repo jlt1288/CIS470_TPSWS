@@ -27,6 +27,9 @@
                     <input type="submit" id="search" name="search" value="Search" />
                 </form>
             </div>
+            <span id="request" style="float: right; margin-right: -200px; margin-top: 45px; font-size: 12px; color: #E0E0E0">
+            	<a href="members_area.php?request">Create New Request</a>
+            </span>
 		<?php } ?>
 	</div>	
 </div>
