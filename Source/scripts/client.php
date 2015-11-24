@@ -25,7 +25,7 @@ elseif ((isset($_POST['approval_code']) && isset($_POST['search'])))
 {
 	if (!$request = Client::getRequest($_SESSION['id'], $_POST['approval_code']))
 	{
-		$message = "Error processing request. Please try again.";	
+		$message = "No search results found.";	
 	}
 }
 

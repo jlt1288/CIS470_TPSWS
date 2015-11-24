@@ -9,10 +9,12 @@
 *----------------------------------------------------------------------------
 */
 if (isset($message))
-{
-	echo $message;
-}
-else{
+{?>
+	<div id="message">
+    	<label><?php echo $message; ?></label>
+	</div>
+<?php }
+elseif (!empty($request)){
 ?>
 
 <div id="request">
@@ -80,4 +82,11 @@ else{
 
 </div>
 
-<?php }?>
+<?php }
+else
+{?>
+	<div id="message">
+    	<label>No search results found.</label>
+    </div>
+<?php }
+?>

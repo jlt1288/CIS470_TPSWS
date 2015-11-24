@@ -373,8 +373,8 @@
 			{
 				return false;
 			}
-			$row = mysqli_fetch_array($rs);
-			return new Request($row);			
+
+			return ($rs->num_rows > 0) ? new Request($rs->fetch_array()) : false ;			
 		}
 	
 		public static function createRequest($id, $workType, $experience, $education, $salary, $zip, $distance, $potential_candidates)
