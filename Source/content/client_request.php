@@ -50,10 +50,12 @@ else{
         
 	    <?php
 		    if ($_POST['search'] || !empty($_REQUEST['page']))
-			{			
+			{		
+				$hasResults = false;	
 				// Get the list of potential candidates.
-				if (($candidates = Client::search($_POST['workType'], $_POST['experience'], $_POST['education'], $_POST['salary'], $_POST['zip'], $_POST['distance'], (!empty($_REQUEST['page']) ? $_REQUEST['page'] : 1))) !== false && count($candidates) >= 1)
+				if (($candidates = Client::search($_POST['workType'], $_POST['experience'], $_POST['education'], $_POST['salary'], $_POST['zip'], $_POST['distance'], (!empty($_REQUEST['page']) ? $_REQUEST['page'] : 1))) !== false && count($candidates->data) >= 1)
 				{ 
+					$hasResults = true;
 				?>
 				<table>
                 	<tr>
@@ -63,58 +65,52 @@ else{
 									foreach ($_POST['candidates'] as $candidate){
 										$staff = new Staff($candidate); ?>
                                           <th>                    
-                                          <?php if (!empty($staff->picture)){ ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php }?>
+                                          <?php if (!empty($staff->picture)){ ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php } // end if?>
                                           <label><?php echo $staff->Fname . " " . $staff->Lname; ?></label><br />
                                           <label>Experience: <?php echo $staff->experience; ?> Year(s)</label><br />
                                           <label>Education: <?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College" ); ?></label><br />
                                           <label>Desired Salary: $<?php echo $staff->salary; ?></label><br />
-                                          <?php if (!empty($staff->resume)) { ?><a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">View Resume</a><br /><?php } ?>
+                                          <?php if (!empty($staff->resume)) { ?><a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">View Resume</a><br /><?php } // end if ?>
                                           <input type="checkbox" id="candidates[]" name="candidates[]" onchange="selectCandidate(this)" value="<?php echo $staff->id; ?>" checked/>
                                           </th>
-								<?php $i++; }
-							}?>
+								<?php $i++; }// end for
+							}// end if?>
                     </tr>
 	                <tr>
 					<?php 
 					for ($i = 0; $i < count ($candidates->data); $i++) :
 					
-						if ($i % 3 === 0) { echo '</tr><tr>'; }
+						if ($i % 3 === 0) { echo '</tr><tr>'; } // end if
 						
-						if (!empty($_POST['candidates']) && in_array($candidates->data[$i]['userID'], $_POST['candidates'])) { continue; }
+						if (!empty($_POST['candidates']) && in_array($candidates->data[$i]['userID'], $_POST['candidates'])) { continue; } // end if
 							
 						$staff = new Staff($candidates->data[$i]['userID']);?>
                         <th>                    
-                    	<?php if (!empty($staff->picture)){ ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php }?>
+                    	<?php if (!empty($staff->picture)){ ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php } // end if ?>
                         <label><?php echo $staff->Fname . " " . $staff->Lname; ?></label><br />
                         <label>Experience: <?php echo $staff->experience; ?> Year(s)</label><br />
                         <label>Education: <?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College" ); ?></label><br />
                         <label>Desired Salary: $<?php echo $staff->salary; ?></label><br />
-                        <?php if (!empty($staff->resume)) { ?><a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">View Resume</a><br /><?php } ?>
+                        <?php if (!empty($staff->resume)) { ?><a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">View Resume</a><br /><?php } // end if ?>
     	                <input type="checkbox" id="candidates[]" name="candidates[]" onchange='selectCandidate(this)' value="<?php echo $staff->id; ?>"/>
                         </th>
 					<?php endfor;?>
                     </tr>					
                 </table>
-				<?php }
+                <?php 
+					echo $candidates->links; ?>
+					<div>
+				    	<input type="submit" name="submit" id="submit" value="Submit" />
+				    </div>
+				<?php }// end if
 				else 
-				{
-					echo $GLOBALS['message'];
-				}
-			}
-			
-			
+				{ ?>
+					<div id="message">
+                    	<label>No potential candidates found.</label>
+                    </div>                                     
+				<?php } // end if-else
+			}// end if
 		?>
-        
-    </div>
-    
-   	<?php
-		echo $candidates->links;
-		
-		if ($_POST['search'] || !empty($_REQUEST['page']))
-		{ ?>
-	<div>
-    	<input type="submit" name="submit" id="submit" value="Submit" />
-    </div>
-    <?php } ?>
+	</div>
 </form>
 <?php } ?>
