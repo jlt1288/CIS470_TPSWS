@@ -15,7 +15,7 @@ if (isset($message))
 }
 else{
 ?>
-<form action="<?php echo $_SERVER['PHP_SELF'] . "?request"; ?>" method="POST" name="form1">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>?request" method="POST" name="form1">
 	<div>
     	<label>Type of Work:</label>
         <select id="workType" name="workType" required>
@@ -49,21 +49,40 @@ else{
     	<!-- TODO: Create the select for the potential candidates. -->
         
 	    <?php
-		    if ($_POST['search'])
-			{
+		    if ($_POST['search'] || !empty($_REQUEST['page']))
+			{			
 				// Get the list of potential candidates.
-				if (($candidates = Client::search($_POST['workType'], $_POST['experience'], $_POST['education'], $_POST['salary'], $_POST['zip'], $_POST['distance'])) !== false && count($candidates) >= 1)
+				if (($candidates = Client::search($_POST['workType'], $_POST['experience'], $_POST['education'], $_POST['salary'], $_POST['zip'], $_POST['distance'], (!empty($_REQUEST['page']) ? $_REQUEST['page'] : 1))) !== false && count($candidates) >= 1)
 				{ 
 				?>
 				<table>
+                	<tr>
+                		<?php if (!empty($_POST['candidates']))
+								{
+									$i = 0;
+									foreach ($_POST['candidates'] as $candidate){
+										$staff = new Staff($candidate); ?>
+                                          <th>                    
+                                          <?php if (!empty($staff->picture)){ ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php }?>
+                                          <label><?php echo $staff->Fname . " " . $staff->Lname; ?></label><br />
+                                          <label>Experience: <?php echo $staff->experience; ?> Year(s)</label><br />
+                                          <label>Education: <?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College" ); ?></label><br />
+                                          <label>Desired Salary: $<?php echo $staff->salary; ?></label><br />
+                                          <?php if (!empty($staff->resume)) { ?><a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">View Resume</a><br /><?php } ?>
+                                          <input type="checkbox" id="candidates[]" name="candidates[]" onchange="selectCandidate(this)" value="<?php echo $staff->id; ?>" checked/>
+                                          </th>
+								<?php $i++; }
+							}?>
+                    </tr>
 	                <tr>
 					<?php 
-					$i = 0;
-					foreach ($candidates as $row)
-					{ 
+					for ($i = 0; $i < count ($candidates->data); $i++) :
+					
 						if ($i % 3 === 0) { echo '</tr><tr>'; }
 						
-						$staff = new Staff($row['userID']);?>
+						if (in_array($candidates->data[$i]['userID'], $_POST['candidates'])) { continue; }
+							
+						$staff = new Staff($candidates->data[$i]['userID']);?>
                         <th>                    
                     	<?php if (!empty($staff->picture)){ ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php }?>
                         <label><?php echo $staff->Fname . " " . $staff->Lname; ?></label><br />
@@ -71,9 +90,9 @@ else{
                         <label>Education: <?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College" ); ?></label><br />
                         <label>Desired Salary: $<?php echo $staff->salary; ?></label><br />
                         <?php if (!empty($staff->resume)) { ?><a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">View Resume</a><br /><?php } ?>
-    	                <input type="checkbox" id="candidates[]" name='candidates[]' onclick='selectCandidate(<?php echo $i; ?>)' value="<?php echo $staff->id; ?>"/>
+    	                <input type="checkbox" id="candidates[]" name="candidates[]" onchange='selectCandidate(this)' value="<?php echo $staff->id; ?>"/>
                         </th>
-					<?php $i++; }?>
+					<?php endfor;?>
                     </tr>					
                 </table>
 				<?php }
@@ -89,7 +108,9 @@ else{
     </div>
     
    	<?php
-		if ($_POST['search'])
+		echo $candidates->links;
+		
+		if ($_POST['search'] || !empty($_REQUEST['page']))
 		{ ?>
 	<div>
     	<input type="submit" name="submit" id="submit" value="Submit" />
