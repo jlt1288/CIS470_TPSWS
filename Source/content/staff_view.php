@@ -36,11 +36,11 @@ if (mysqli_num_rows($result)===0){
 	$row = mysqli_fetch_assoc($result);		
 }
 
-?>
+if (isset($message)) { echo '<p id="message" align="center" style="margin:0px; padding-top:2.5px;">' . $message . '</p>'; }
 
-<?php if ($_SESSION['id'] === $id) { ?>
+if ($_SESSION['id'] === $id) { ?>
 <div>
-<form action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
+<form action="?edit" method="POST">
 	<input type="hidden" id="edit" name="edit" />
 	<input type="submit" id="submit" name="submit" value="Edit Profile" />
 </form>
@@ -67,6 +67,8 @@ if (mysqli_num_rows($result)===0){
     </div>
     
     <div>
+    	<label>Type of Work:</label><br />
+        <label id="workType" name="workType"><?php echo $row['workType']; ?></label><br />
     	<label>Experience:</label><br />
         <label id="experience" name="experience"><?php echo $row['experience']; ?></label><br />
         <label>Education:</label><br />
@@ -78,5 +80,5 @@ if (mysqli_num_rows($result)===0){
     <?php if (isset($row['resume']) && !empty($row['resume'])){ ?>
     <div>
     	<label>Resume:</label><br />
-        <a href="uploads/resumes/<?php echo $row['resume']; ?>">Download</a>
+        <a href="uploads/resumes/<?php echo $row['resume']; ?>" target="_blank">Download</a>
    </div><?php } ?>

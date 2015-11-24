@@ -87,18 +87,18 @@ if (isset($_POST['submit']) && (isset($_GET['forgotpassword']) or isset($_POST['
 			?>
             <?php } ?>
 				<h3 style= "margin-left: 110px; margin-top: 15px; color: #E0E0E0;"><u>Login</u></h3>
-				<form id="login" style="margin-top: 26px;" name="login" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+				<form id="login" style="margin-top: 26px;" name="login" method="post" action="<?php echo  $_SERVER['PHP_SELF']; ?>">
 					<table>
 						<tr>
 							<th><label>Username:</label></th>
-							<th><input id="login" name="login" type="text" style="margin-right: 8px;"></th>
+							<th><input required id="login" name="login" type="text" style="margin-right: 8px;"></th>
 						</tr>
 						<tr>
 							<th><label style="margin-top: 8px;">Password:</label></th>
-							<th><input type="password" id="password" name="password" style="margin-right: 8px;"></th>
+							<th><input required type="password" id="password" name="password" style="margin-right: 8px;"></th>
 						</tr>
 						<tr>
-							<th><a href="<?php $_SERVER['PHP_SELF']; ?>?forgotpassword"  style="font-size: 12px;">Forgot Password?</a></th>
+							<th><a href="<?php echo $_SERVER['PHP_SELF']; ?>?forgotpassword"  style="font-size: 12px;">Forgot Password?</a></th>
 							<th><input type="submit" id="submit" name="submit" value="Login"></th>
 						</tr>
 					</table>                
@@ -110,17 +110,17 @@ if (isset($_POST['submit']) && (isset($_GET['forgotpassword']) or isset($_POST['
 				<?php } ?>
 				
 				<h3 style= "margin-left: 55px; margin-top: 15px; color: #E0E0E0;"><u>Recover Password</u></h3>
-				<form id="login" style="margin-top: 26px; margin-left: 27px;" name="forgot" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+				<form id="login" style="margin-top: 26px; margin-left: 27px;" name="forgot" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?forgotpassword">
 					<table>
 						<tr>
 							<th><label>Email:</label></th>
-							<th><input id="email" name="email" type="text"></th>
+							<th><input id="email" name="email" type="email" required></th>
 						</tr>
 					</table>  
 					<table style= "margin-left: 50px; margin-top: 10px;">
 						<tr>
-							<th><input type="submit" style= "float: right; margin: 5px;" id="back" name="back" value="Back"></th>
-							<th><input type="submit" style= "float: left; margin: 5px;" id="submit" name="submit" value="Send"></th>
+							<th><a href="index.php" class="button">Back</a></th>
+							<th><input type="submit" class="button" style="float: left; margin: 5px;" id="submit" name="submit" value="Send"></th>
 						</tr>
 					</table>
 				</form> 

@@ -40,7 +40,7 @@ if (isset($_POST['type']) && $_POST['type'] === "picture" && !empty($_FILES))
 	// if everything is ok, try to upload file
 	} else {
 		if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file)) {
-			$message = "The file " . $target_filename . " has been uploaded.\nThe Width is ". $width . ". The Height is ". $height . ".";
+			$message = "The " . $_POST['type'] . " was successfully uploaded.";
 		} else {
 			$message = "Sorry, there was an upload uploading your file.";
 		}
@@ -65,7 +65,7 @@ if (isset($_POST['type']) && $_POST['type'] === "picture" && !empty($_FILES))
 	// if everything is ok, try to upload file
 	} else {
 		if (move_uploaded_file($_FILES["resume"]["tmp_name"], $target_file)) {
-			$message = "The file " . $target_filename . " has been uploaded.";
+			$message = "The " . $_POST['type'] . " was successfully uploaded.";
 		} else {
 			$message = "Sorry, there was an upload uploading your file.";
 		}

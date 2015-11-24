@@ -1,7 +1,13 @@
-<br />
-<p> Client area layout goes down here. </p>
-<?php if (isset($confirmation_code)){ echo '<p>Confirmation Code: ' . $confirmation_code . '</p>'; } ?>
+<?php
 
-<form action="<?php $_SERVER["PHP_SELF"]; ?>" method="POST">
-	<input type="submit" name="submit_request" id="submit_request" value="Submit" />
-</form>
+	if (isset($_POST['request']) || isset($_GET['request']))
+	{
+		require_once('content/client_request.php');
+		
+	}
+	else
+	{
+		require_once('content/client_viewrequest.php');	
+	}
+
+?>
