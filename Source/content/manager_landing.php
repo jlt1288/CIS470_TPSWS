@@ -38,7 +38,7 @@ if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) 
                 	<input type="hidden" name="search" id="search" value="search" />
                 	<input type="hidden" name="approval_code" id="approval_code" value="<?php echo $request->approvalNumber; ?>" />
                 	<input type="hidden" name="access" id="access" value="client" />
-                	<input type="submit" name="submit" id="submit" value="View Profile" />
+                	<input type="submit" name="submit" id="submit" value="View Request" />
                 </td>
         	</tr>
         </form><br />
