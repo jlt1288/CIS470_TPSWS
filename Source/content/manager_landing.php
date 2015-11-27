@@ -10,15 +10,13 @@
 */
 
 if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) { ?>
-	<table>
+
+	<div style="float: left; margin-top: 0px; font-size: 18px;">Staff Requests:</div><br /><br />
+	<table align="center">
     	<tr>
 	   		<th>Date Opened</th>
             <th>Status</th>
            	<th>Approval Code</th>
-	        <th>Work Type</th>
-            <th>Experience</th>
-            <th>Education</th>
-            <th>Salary</th>
        	</tr>
     <?php 
 		for ($i = 0; $i < count ($results->data); $i++) :
@@ -29,11 +27,7 @@ if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) 
        		<tr>
             	<td><?php echo $request->dateOpened; ?></td>
                 <td><?php echo $request->status; ?></td>
-	           	<td><?php echo $request->approvalNumber; ?></td>
-                <td><?php echo $request->workType; ?></td>
-                <td><?php echo $request->experience; ?> Year(s)</td>
-                <td><?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College" ); ?></td>
-                <td><?php echo $request->salary; ?></td>                	   	        
+	           	<td><?php echo $request->approvalNumber; ?></td>               	   	        
         	    <td>
                 	<input type="hidden" name="search" id="search" value="search" />
                 	<input type="hidden" name="approval_code" id="approval_code" value="<?php echo $request->approvalNumber; ?>" />
@@ -41,16 +35,17 @@ if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) 
                 	<input type="submit" name="submit" id="submit" value="View Request" />
                 </td>
         	</tr>
-        </form><br />
+        </form>
     <?php	
 	
 		endfor;
 	?>
     </table>
-<?php 
-	echo $results->links;
-}
-else
+   	<div id="links">
+		<?php echo $results->links; ?>
+	</div>
+<?php
+} else
 {
 	if (!empty($GLOBALS['message'])) { ?>
 	
