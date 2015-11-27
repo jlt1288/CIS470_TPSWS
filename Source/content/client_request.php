@@ -97,8 +97,7 @@ else{
 					<?php endfor;?>
                     </tr>					
                 </table>
-                <?php 
-					echo $candidates->links; ?>
+                <?php echo $candidates->links; ?>
 					<div>
 				    	<input type="submit" name="submit" id="submit" value="Submit" />
 				    </div>

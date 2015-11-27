@@ -19,16 +19,23 @@ elseif (!empty($request)){
 
 <div id="request">
 	<div id="state">
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+    	<label>Date Opened: </label>
+		<label id="dateOpened" name="dateOpened"><?php echo $request->dateOpened; ?></label><br />
 		<label>Status: </label>
-		<?php if (($_SESSION['access'] === "manager" && $request->status !== "VALID") || $_SESSION['access'] === "client") { ?><label id="status" name="status"><?php echo $request->status; ?></label><br /><?php } else { ?>
-        <select id="status" anme="status">
+		<?php if (($_SESSION['access'] === "manager" && $request->status != "VALID") || $_SESSION['access'] === "client") { ?><label id="status" name="status"><?php echo $request->status; ?></label><br /><?php } else { ?>
+        <select id="status" name="status">
 			<option value="VALID" selected>VALID</option>
             <option value="INVALID">INVALID</option>
             <option value="UNABLE TO FILL">UNABLE TO FILL</option>
             <option value="FILLED">FILLED</option>
-        </select><br /><?php } ?>
-		<label>Date Opened: </label>
-		<label id="dateOpened" name="dateOpened"><?php echo $request->dateOpened; ?></label><br />
+        </select><br />
+        <input type="hidden" name="approval_code" id="approval_code" value="<?php echo $_POST['approval_code']; ?>" />
+        <input type="hidden" name="search" id="search" value="<?php echo $request->id; ?>" />
+        <input type="hidden" name="access" id="access" value="client" />
+		<input type="submit" name="submit" id="submit" value="Submit" />
+		<?php } ?>		
+    </form>
     </div>
     
     <div id="info">
@@ -64,10 +71,15 @@ elseif (!empty($request)){
         	            <label>Education: <?php echo (($staff->education === "0") ? "No Degree" : ($staff->education === "1") ? "High School" : "College"); ?></label><br />
             	        <label>Salary: <?php echo "$" . $staff->salary; ?></label>
                 	    <?php
-							if ($_SESSION['acccess'] === "manager")
+							if ($_SESSION['access'] === "manager")
 							{
 						?>
-    	                <br /><a href="?page=staff&view=<?php echo $staff->id; ?>">View Profile</a>
+    	                <br /><form action="<?php echo $_SERVER['PHP_SELF']; ?>?view" method="POST">
+                        		<input type="hidden" name="approval_code" id="approval_code" value="<?php echo $request->approvalNumber; ?>" />
+                                <input type="hidden" name="id" id="id" value="<?php echo $candidate['staffID']; ?>" />
+                               	<input type="hidden" name="access" id="access" value="staff" />
+                                <input type="submit" name="search" id="search" value="View Profile" />
+                              </form>
         	            <?php } ?>
                 	</div>
 				</th>
