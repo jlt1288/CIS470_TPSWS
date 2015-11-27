@@ -5,9 +5,11 @@
 *	Creation Date: 11/16/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/16/2015
+*	Modification Date: 11/27/2015
 *----------------------------------------------------------------------------
 */
+
+// Required for the internal classes we use to retrieve data.
 require_once( 'scripts/classes.php' );
 
 if ((isset($_POST['request']) || isset($_GET['request'])) && isset($_POST['submit']))
@@ -23,7 +25,7 @@ if ((isset($_POST['request']) || isset($_GET['request'])) && isset($_POST['submi
 }
 elseif ((isset($_POST['approval_code']) && isset($_POST['search'])))
 {
-	if (!$request = Client::getRequest($_SESSION['id'], $_POST['approval_code']))
+	if (!$request = Client::getRequest($_POST['approval_code'], $_SESSION['access']))
 	{
 		$message = "No search results found.";	
 	}

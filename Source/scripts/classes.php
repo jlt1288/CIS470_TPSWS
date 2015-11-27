@@ -220,7 +220,25 @@
 			$this->populate($this->id);
 		}
 		
-		
+		public static function getID($employee_id)
+		{
+			// Connect to the database for further use.
+			require_once('scripts/database.php');
+			
+			$sql = "SELECT * FROM users WHERE userName='$employee_id'";
+			
+			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
+			
+			if ( mysqli_num_rows( $result ) === 0 ){
+				mysqli_free_result($result);
+				return false;
+			}else{
+				$row = mysqli_fetch_assoc( $result );
+				
+				$id = $row['userID'];
+				return $id;
+			}
+		}
 	}
 	
 	class Request{
@@ -276,6 +294,40 @@
 			
 			return $tmp;
 		}
+		
+		public static function update($id, $value)
+		{
+			// Connect to the database for further use.
+			require( 'scripts/database_admin.php' );
+
+			$query = "UPDATE staffrequest SET status='$value' WHERE staffRequestID='$id'";
+			
+			if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) ) === 0){
+				return true;
+			}
+
+			return false;	
+		}
+		
+		public static function getNew($page = 1)
+		{
+			//connect to db server; select database
+			require('scripts/database.php');
+			
+			$query = "SELECT * FROM staffrequest WHERE status='VALID'";
+			
+			$paginator = new Paginator($query);
+								
+			if(!$results = $paginator->getData( $page, 25 )) {
+				$GLOBALS['message'] = "No new staffing requests at this time.";
+				return false;	
+			}
+			else
+			{
+				$results->links = $paginator->createLinks($page, 'pages');
+				return $results;
+			}	
+		}
 	}
 	
 	class Paginator {
@@ -296,7 +348,7 @@
 			$this->_total = $rs->num_rows;
 		}
 		
-		public function getData($page = 1, $limit = 2)
+		public function getData($page = 1, $limit = 9)
 		{
 			//connect to db server; select database
 			require('scripts/database.php');
@@ -361,14 +413,22 @@
 	}
 	
 	class Client {
-				
-		public static function getRequest($id, $approval_code)
+		
+		public static function getRequest($approval_code, $access)
 		{
 			//connect to db server; select database
 			require('scripts/database.php');
 			
-			$query = "SELECT * FROM staffrequest WHERE userID='$id' AND approvalNumber='$approval_code'";
-			
+			if ($access === "manager")
+			{
+				$query = "SELECT * FROM staffrequest WHERE approvalNumber='$approval_code'";
+			}
+			elseif ($access === "client")
+			{
+				$id = $_SESSION['id'];
+				$query = "SELECT * FROM staffrequest WHERE userID='$id' AND approvalNumber='$approval_code'";
+			}
+						
 			if (!$rs = $connection->query($query))
 			{
 				return false;

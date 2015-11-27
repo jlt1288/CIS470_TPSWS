@@ -5,31 +5,52 @@
 *	Creation Date: 11/13/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/20/2015
+*	Modification Date: 11/27/2015
 *----------------------------------------------------------------------------
 */
 ?>
 <div id="header">
 	<div id="navigationHeader">
 		<img src="styles/tpslogo.png" class="logo" alt="TPS" style="float: left;">
-		<p style="float: left; margin: 0px; margin-left: 80px; margin-top: -6px; font-size: 48px; color:#202020;">Taylor's Professional Services</p>        
+		<p style="float: left; margin: 0px; margin-left: 80px; margin-top: -6px; font-size: 48px; color:#202020;">Taylor's Professional Services</p>   
 		<?php if (isset($_SESSION['id'])) { ?>
-	        <div id="logout" style="float: right; margin-top: 0px; font-size: 18px;">
+        	<div id="logout" style="float: right; margin-top: 7px; font-size: 18px;">
+				<a id="home_link" href="members_area.php">Home</a>
+			</div>     
+	        <div id="logout" style="float: right; margin-right:12px; margin-top: 7px; font-size: 18px;">
 				<a id="logout_link" href="<?php $_SERVER["PHP_SELF"];?>?logout">Logout</a>
 			</div>
-		<?php } ?>
+		<?php }// end if ?>
         
-        <?php if (isset($_SESSION['access']) && ($_SESSION['access'] === "client")) { ?>
+        <?php 
+			// Show if we're a client or manager.
+			if (isset($_SESSION['access']) && ($_SESSION['access'] === "client" || $_SESSION['access'] === "manager")) { ?>
 			<div id="search_request" style="float: right; margin-top: 12px; font-size: 12px; color:#E0E0E0;">
             	<form action="?view" method="POST">
-                	<label>Search: </label>
-                    <input id="approval_code" name="approval_code" placeholder="Search by code." />
+                	<input type="hidden" id="access" name="access" value="client" />
+                    <label>Search: </label>
+                    <input id="approval_code" name="approval_code" placeholder="Search for request." />
                     <input type="submit" id="search" name="search" value="Search" />
                 </form>
             </div>
+            <?php 
+				// Only show if we're a client, not if we're a manager.
+				if ($_SESSION['access'] === "client") { ?>
             <span id="request" style="float: right; margin-right: -200px; margin-top: 45px; font-size: 12px; color: #E0E0E0">
             	<a href="members_area.php?request">Create New Request</a>
             </span>
-		<?php } ?>
+		<?php } // end if
+		}// end if?>
+        
+        <?php if (isset($_SESSION['access']) && ($_SESSION['access'] === "manager")) { ?>
+			<div id="search_request" style="float: left; margin-left: -62px; margin-top: 12px; font-size: 12px; color:#E0E0E0;">
+            	<form action="?view" method="POST">
+                	<input type="hidden" id="access" name="access" value="staff" />
+                    <label>Search: </label>
+                    <input id="employee_id" name="employee_id" placeholder="Search for employee." />
+                    <input type="submit" id="search" name="search" value="Search" />
+                </form>
+            </div>
+		<?php } //end if ?>
 	</div>	
 </div>

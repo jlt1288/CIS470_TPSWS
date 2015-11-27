@@ -10,7 +10,21 @@
 */
 
 if (isset($message)) { ?>
-<p id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message; ?></p> <?php }
+<p id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message; ?></p> <?php } // end if
+
+if (empty($staff)) echo "Error staff is nil.";
+
+if ($_SESSION['access'] === "manager" && (!empty($_POST['approval_code'])))
+{?>
+	<div id="back_request" style="float: right; margin-right: 15px; margin-top: 12px;">
+        <form action="?view" method="POST">
+            <input type="hidden" id="access" name="access" value="client" />
+            <input type="hidden" id="search" name="search" value="search" />
+            <input  type = "hidden" id="approval_code" name="approval_code" value="<?php echo $_POST['approval_code']; ?>"/>
+			<input type="submit" id="submit" name="submit" value="Go Back" />
+		</form>
+	</div>	
+<?php } // end if
 
 if ($_SESSION['id'] === $id) { ?>
 <div>
@@ -18,7 +32,7 @@ if ($_SESSION['id'] === $id) { ?>
 	<input type="hidden" id="edit" name="edit" />
 	<input type="submit" id="submit" name="submit" value="Edit Profile" />
 </form>
-</div><?php }
+</div><?php } // end if
 
  if (isset($staff->picture)){ ?>
 <img id="pic" name="pic" src="uploads/pictures/<?php echo $staff->picture; ?>" /> <?php } ?>
