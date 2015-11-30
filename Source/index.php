@@ -5,7 +5,7 @@
 *	Creation Date: 11/13/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/20/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
 
@@ -29,8 +29,11 @@ if (isset($_SESSION['access']))
 	header('Location:members_area.php?' . (($_SESSION['access'] === "staff") ? 'view=' . $_SESSION['id'] : ""));
 }
 
+// Determine the action we're trying to take.
 if (isset($_POST['submit']) && (isset($_GET['forgotpassword']) or isset($_POST['forgotpassword'])))
 {
+	// Looks like we forgot our password.
+	
 	$random_hash = md5(uniqid(rand(), true));
 	$new_pass = strtoupper(substr($random_hash, (strlen($random_hash) % 2), 10));
 	
@@ -63,6 +66,8 @@ if (isset($_POST['submit']) && (isset($_GET['forgotpassword']) or isset($_POST['
 } 
 elseif (isset($_POST['submit']) && (!isset($_GET['forgotpassword']) or !isset($_POST['forgotpassword'])))
 {	
+	// Looks like we're trying to log into the server.
+	
 	// Get information submitted to the page.
 	$user = new User($_POST['login'], $_POST['password'], "");
 	
@@ -96,11 +101,7 @@ elseif (isset($_POST['submit']) && (!isset($_GET['forgotpassword']) or !isset($_
 			<div id="loginMain">
             <?php
 				if (!isset($_GET['forgotpassword']))
-				{
-					if (isset($message))
-					{
-			?>
-            <?php } ?>
+				{?>
 				<h3 style= "margin-left: 110px; margin-top: 15px; color: #E0E0E0;"><u>Login</u></h3>
 				<form id="login" style="margin-top: 26px;" name="login" method="post" action="<?php echo  $_SERVER['PHP_SELF']; ?>">
 					<table>
@@ -119,10 +120,7 @@ elseif (isset($_POST['submit']) && (!isset($_GET['forgotpassword']) or !isset($_
 					</table>                
 				</form>
 				<span id="message" name="message"><?php echo $message; ?></span><br \>
-				<?php } else { 
-					if (isset($message)) {?>
-						
-				<?php } ?>
+				<?php } else { ?>
 				
 				<h3 style= "margin-left: 55px; margin-top: 15px; color: #E0E0E0;"><u>Recover Password</u></h3>
 				<form id="login" style="margin-top: 26px; margin-left: 27px;" name="forgot" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?forgotpassword">

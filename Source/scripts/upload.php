@@ -5,12 +5,15 @@
 *	Creation Date: 11/13/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/20/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
 
+// Determine what item we're triyng to upload.
 if (isset($_POST['type']) && $_POST['type'] === "picture" && !empty($_FILES))
 {
+	// Looks like we're trying to upload a picture.
+	
 	$target_dir = "uploads/pictures/";
 	$imageFileType = pathinfo($target_dir . basename($_FILES["picture"]["name"]),PATHINFO_EXTENSION);
 	$target_filename = md5(uniqid(basename($_FILES["picture"]["name"]), true)) . '.' . $imageFileType;
@@ -56,6 +59,8 @@ if (isset($_POST['type']) && $_POST['type'] === "picture" && !empty($_FILES))
 	}
 }elseif (isset($_POST['type']) && $_POST['type'] === "resume" && !empty($_FILES))
 {
+	// Looks like we're trying to upload a resume.
+	
 	$target_dir = "uploads/resumes/";
 	$fileType = pathinfo($target_dir . basename($_FILES["resume"]["name"]),PATHINFO_EXTENSION);
 	$target_filename = md5(uniqid(basename($_FILES["resume"]["name"]), true)) . '.' . $fileType;
@@ -79,6 +84,12 @@ if (isset($_POST['type']) && $_POST['type'] === "picture" && !empty($_FILES))
 			$message = "Sorry, there was an error uploading your file.";
 		}
 	}
+}
+else
+{
+	// Ooops, looks like someone is trying to do something naughty.
+	
+	$message = "Unable to verify upload data.";
 }
 
 ?> 

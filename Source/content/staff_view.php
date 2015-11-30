@@ -5,15 +5,18 @@
 *	Creation Date: 11/13/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/13/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
 
+// if a message is set show message.
 if (isset($message)) { ?>
-<p id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message; ?></p> <?php } // end if
+<div id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message; ?></div> <?php } // end if
 
+// if no staff is set, show error message.
 if (empty($staff)) echo "Error staff is nil.";
 
+// Only show if we're a manager and arrived here from a staff request.
 if ($_SESSION['access'] === "manager" && (!empty($_POST['approval_code'])))
 {?>
 	<div id="back_request" style="float: right; margin-right: 15px; margin-top: 12px;">
@@ -26,6 +29,7 @@ if ($_SESSION['access'] === "manager" && (!empty($_POST['approval_code'])))
 	</div>	
 <?php } // end if
 
+// Only show if we're the staff member associated with this profile.
 if ($_SESSION['id'] === $id) { ?>
 <div>
 <form action="?edit" method="POST">

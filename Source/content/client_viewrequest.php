@@ -5,7 +5,7 @@
 *	Creation Date: 11/13/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/20/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
 if (isset($message))

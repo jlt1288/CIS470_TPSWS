@@ -8,9 +8,10 @@
 *	Modification Date: 11/16/2015
 *----------------------------------------------------------------------------
 */
-
+// Required for the internal classes we use to retrieve data.
 require_once( 'scripts/classes.php' );
 
+// Determine if there is an ID in the address bar.
 if (isset($_POST['view']))
 {
 	$id = $_POST['view'];
@@ -19,19 +20,25 @@ elseif (isset($_GET['view']))
 {
 	$id = $_GET['view'];
 }
+// otherwise use session ID.
 else
 {
 	$id = $_SESSION['id'];
 }
 
+// if we get it from the session ID populate the user information for editing purposes.
 if ($id == $_SESSION['id']){
 	$user = new User($id, "", "populate");
 }
 
+// Create a new staff member based on the id.
 $staff = new Staff($id);
 
+// Determine what is being done by the users.
 if (isset($_POST['type']) && $_POST['type'] !== "info" && $_POST['type'] != "account")
 {
+	// Looks like we're trying to upload a picture or resume.
+	
 	// Required for upload purposes.
 	require_once('scripts/upload.php');
 
@@ -48,6 +55,7 @@ if (isset($_POST['type']) && $_POST['type'] !== "info" && $_POST['type'] != "acc
 }
 elseif (isset($_POST['type']) && $_POST['type'] === "info")
 {
+	// Looks like we're trying to update our staffing information in the database.
 	$id = $_SESSION['id'];
 	$staff->available = $_POST['available'];
 	$staff->Fname = $_POST['Fname'];
@@ -71,10 +79,12 @@ elseif (isset($_POST['type']) && $_POST['type'] === "info")
 	
 } elseif (isset($_POST['type']) && $_POST['type'] === "account")
 {
+	// Looks like we're trying to update our account information in the database.
 	if (isset($_POST['current_pwd']))
 	{		
 		$user = new User($_SESSION['id'], $_POST['current_pwd'], "id");
 		
+		// Only allow information to be changed if we can log in with the account.
 		if ($user->isLoggedIn)
 		{
 			if (isset($_POST['email']))
@@ -104,6 +114,7 @@ elseif (isset($_POST['type']) && $_POST['type'] === "info")
 	}
 }
 
+// This function is used to list the states for choosing.
 function listStates($selected)
 {
 	$states_arr = array('AL'=>"Alabama",'AK'=>"Alaska",'AZ'=>"Arizona",'AR'=>"Arkansas",'CA'=>"California",'CO'=>"Colorado",'CT'=>"Connecticut",'DE'=>"Delaware",'DC'=>"District Of Columbia",'FL'=>"Florida",'GA'=>"Georgia",'HI'=>"Hawaii",'ID'=>"Idaho",'IL'=>"Illinois", 'IN'=>"Indiana", 'IA'=>"Iowa",  'KS'=>"Kansas",'KY'=>"Kentucky",'LA'=>"Louisiana",'ME'=>"Maine",'MD'=>"Maryland", 'MA'=>"Massachusetts",'MI'=>"Michigan",'MN'=>"Minnesota",'MS'=>"Mississippi",'MO'=>"Missouri",'MT'=>"Montana",'NE'=>"Nebraska",'NV'=>"Nevada",'NH'=>"New Hampshire",'NJ'=>"New Jersey",'NM'=>"New Mexico",'NY'=>"New York",'NC'=>"North Carolina",'ND'=>"North Dakota",'OH'=>"Ohio",'OK'=>"Oklahoma", 'OR'=>"Oregon",'PA'=>"Pennsylvania",'RI'=>"Rhode Island",'SC'=>"South Carolina",'SD'=>"South Dakota",'TN'=>"Tennessee",'TX'=>"Texas",'UT'=>"Utah",'VT'=>"Vermont",'VA'=>"Virginia",'WA'=>"Washington",'WV'=>"West Virginia",'WI'=>"Wisconsin",'WY'=>"Wyoming");
