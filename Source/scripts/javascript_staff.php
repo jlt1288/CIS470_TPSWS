@@ -5,9 +5,10 @@
 *	Creation Date: 11/13/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/20/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
+// If we're trying to edit the staff profile, use this javascript.
  if (isset($_POST['edit']) || isset($_GET['edit'])){ ?>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript">

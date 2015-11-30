@@ -5,9 +5,10 @@
 *	Creation Date: 11/17/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/20/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
+	// Use to sort arrays by column name.
 	function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
     	$sort_col = array();
 		foreach ($arr as $key=> $row) {
@@ -16,9 +17,10 @@
 		array_multisort($sort_col, $dir, $arr);
 	}
 	
+	
 	class User {
-				
-		public function __construct($user, $pass, $type)
+		// constructor needs user, pass and type.
+		public function __construct($user, $pass, $type = "id")
 		{
 			if ($type === "populate")
 			{
@@ -43,8 +45,8 @@
 			require( 'scripts/database.php' );
 			
 			// Run query to find if the username/password combination exists.
-			// TODO: Change table, values, and variables to be in line with the database.
-			$sql = "SELECT * FROM users WHERE userID='$id'";
+			
+			$sql = "SELECT * FROM user WHERE userID='$id'";
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
 			if ( mysqli_num_rows( $result ) === 0 ){
@@ -69,7 +71,7 @@
 			
 			// Run query to find if the username/password combination exists.
 			// TODO: Change table, values, and variables to be in line with the database.
-			$sql = "SELECT * FROM users WHERE " . (($type === "id") ? "userID" : "userName") . "= '$user' AND userPassword = '$pass'";
+			$sql = "SELECT * FROM user WHERE " . (($type === "id") ? "userID" : "userName") . "= '$user' AND userPassword = '$pass'";
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
 			if ( mysqli_num_rows( $result ) === 0 ){
@@ -94,12 +96,13 @@
 		    header("Location:");
 		}
 		
+		// This function is used to update data for the active user account.
 		public function update($var, $value)
 		{		
 			// Connect to the database for further use.
 			require( 'scripts/database_admin.php' );
 
-			$query = "UPDATE users SET user" . $var ."='$value' WHERE userID='$this->id'";
+			$query = "UPDATE user SET user" . $var ."='$value' WHERE userID='$this->id'";
 			
 			if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) ) === 0){
 				return true;
@@ -108,6 +111,7 @@
 			return false;		
 		}
 		
+		// This function is used to send a new password to the email account.
 		public static function emailPassword($email, $new_pass)
 		{
 			// Trim the whitespaces off the email address.
@@ -118,12 +122,12 @@
 			require( 'scripts/database_admin.php' );
 			
 			// Run query to find if the username/password combination exists.
-			$query = "SELECT * FROM users WHERE userEmail = '$email'";
+			$query = "SELECT * FROM user WHERE userEmail = '$email'";
 	
 			if ($connection->query($query) or die('Error: ' . mysqli_error($connection))===0){
 		
 				// TODO: Email new password to email address.				
-				$query = "UPDATE users SET userPassword='$pass' WHERE userEmail='$email'";
+				$query = "UPDATE user SET userPassword='$pass' WHERE userEmail='$email'";
 				
 				if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) ) === 0){
 					return true;	
@@ -137,6 +141,7 @@
 			}	
 		}
 		
+		// This function updates the active user.
 		public function refresh()
 		{
 			$this->populate($this->id);
@@ -145,7 +150,7 @@
 	}
 	
 	class Staff{
-		
+		// constructor requires id.
 		public function __construct($id)
 		{
 			if ($this->populate($id))
@@ -176,8 +181,7 @@
 			// Connect to the database for further use.
 			require( 'scripts/database.php' );
 
-			// Run query to find if the username/password combination exists.
-			// TODO: Change table, values, and variables to be in line with the database.
+			// Run query to find if the staff member exists.
 			$sql = "SELECT * FROM staff WHERE userID='$id'";
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));
 
@@ -204,6 +208,7 @@
 			}
 		}
 		
+		// This function is used to update the data associated with the active staff member.
 		public function update()
 		{
 			// Connect to the database for further use.
@@ -215,17 +220,19 @@
 			return true;			
 		}
 		
+		// This function is used to refresh the data for the active staff member.
 		public function refresh()
 		{
 			$this->populate($this->id);
 		}
 		
+		// This function is used to get the staff ID based on employee ID.
 		public static function getID($employee_id)
 		{
 			// Connect to the database for further use.
 			require_once('scripts/database.php');
 			
-			$sql = "SELECT * FROM users WHERE userName='$employee_id'";
+			$sql = "SELECT * FROM user WHERE userName='$employee_id'";
 			
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
@@ -242,6 +249,7 @@
 	}
 	
 	class Request{
+		// constructor requires row.
 		public function __construct($row)
 		{
 			$this->id = $row['staffRequestID'];
@@ -269,7 +277,7 @@
 		public $dateOpened;
 		public $approvalNumber;
 		
-		
+		// This function returns the candidates associated with this staffing request.
 		public function getCandidates()
 		{
 			//connect to db server; select database
@@ -295,6 +303,7 @@
 			return $tmp;
 		}
 		
+		// This function is used to update the staff request status.
 		public static function update($id, $value)
 		{
 			// Connect to the database for further use.
@@ -309,6 +318,7 @@
 			return false;	
 		}
 		
+		// This function is used to get the new staffing requests in the database.
 		public static function getNew($page = 1)
 		{
 			//connect to db server; select database
@@ -337,6 +347,7 @@
 		private $_page;
 		private $_total;
 		
+		// constructor requires query.
 		public function __construct($query)
 		{
 			//connect to db server; select database
@@ -348,6 +359,7 @@
 			$this->_total = $rs->num_rows;
 		}
 		
+		// This function is used to get the data associated with this query.
 		public function getData($page = 1, $limit = 9)
 		{
 			//connect to db server; select database
@@ -378,6 +390,7 @@
 		    return $result;
 		}
 		
+		// This function is used to create a links list based on this query.
 		public function createLinks( $links, $list_class )
 		{
 			if ( $this->_limit == 'all' ) {
@@ -410,10 +423,8 @@
 		
 			return $html;
 		}
-	}
-	
-	class Client {
 		
+		// This function is used to get the request associated with the approval code.
 		public static function getRequest($approval_code, $access)
 		{
 			//connect to db server; select database
@@ -436,8 +447,9 @@
 
 			return ($rs->num_rows > 0) ? new Request($rs->fetch_array()) : false ;			
 		}
-	
-		public static function createRequest($id, $workType, $experience, $education, $salary, $zip, $distance, $potential_candidates)
+		
+		// This function is used to create a new request.
+		public static function create($id, $workType, $experience, $education, $salary, $zip, $distance, $potential_candidates)
 		{
 			$random_hash = md5(uniqid(rand(), true));			
 			$app_num =  strtoupper(substr($random_hash, (strlen($random_hash) % 2), 10));
@@ -465,8 +477,11 @@
 			}	
 				
 			return $app_num;	
-		}		
-		
+		}
+	}
+	
+	class Client {
+				
 		public static function getZipCodes($code, $distance)
 		{
 			//connect to db server; select database

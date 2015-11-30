@@ -8,10 +8,12 @@
 *	Modification Date: 11/27/2015
 *----------------------------------------------------------------------------
 */
+	// if we're trying to view a request, show view content.
 	if (isset($_POST['view']) || isset($_GET['view']))
 	{
 		require_once('content/client_viewrequest.php');	
 	}
+	// otherwise show the create new request content.
 	else
 	{
 		require_once('content/client_request.php');

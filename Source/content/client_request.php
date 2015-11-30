@@ -5,14 +5,18 @@
 *	Creation Date: 11/13/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/20/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
 
+// If there is an error message display it.
 if (isset($message))
-{
-	echo $message;
-}
+{?>
+	<div id="message">
+    	<label><?php echo $message; ?></label>
+	</div>
+<?php }
+// Otherwise display layout.
 else{
 ?>
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>?request" method="POST" name="form1">
@@ -49,6 +53,7 @@ else{
     	<!-- TODO: Create the select for the potential candidates. -->
         
 	    <?php
+			// Ensure we've searched and are looking at a page.
 		    if ($_POST['search'] || !empty($_REQUEST['page']))
 			{		
 				$hasResults = false;	

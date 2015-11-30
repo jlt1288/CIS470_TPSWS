@@ -5,7 +5,7 @@
 *	Creation Date: 11/03/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/24/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
 	require( 'scripts/student_info.php' );

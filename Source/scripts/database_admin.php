@@ -5,7 +5,7 @@
 *	Creation Date: 11/03/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/16/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
 	require( 'scripts/student_info.php' );
@@ -14,5 +14,5 @@
 	$databaseUsername = $student . "_470wrt";
 	$databasePassword = "readwrite";
 	
-	$connection = mysqli_connect($databaseHost, $databaseUsername, $databasePassword, $databaseName) or die('Could not connect to MySQL: ' . mysqli_error($connection));
+	$connection = new mysqli($databaseHost, $databaseUsername, $databasePassword, $databaseName) or die('Could not connect to MySQL: ' . mysqli_error($connection));
 ?>

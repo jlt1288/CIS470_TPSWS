@@ -5,10 +5,11 @@
 *	Creation Date: 11/27/2015
 *
 *	Modification Author: Joshua Thompson
-*	Modification Date: 11/27/2015
+*	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
 
+// get new staffing requests which are valid. Invalid, Unable to Fill or Filled requests will not be shown as they are closed out.
 if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) { ?>
 
 	<div style="float: left; margin-top: 0px; font-size: 18px;">Staff Requests:</div><br /><br />
@@ -19,6 +20,7 @@ if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) 
            	<th>Approval Code</th>
        	</tr>
     <?php 
+		// iterate through the requests.
 		for ($i = 0; $i < count ($results->data); $i++) :
 		
 			$request = new Request($results->data[$i]);
@@ -47,9 +49,10 @@ if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) 
 <?php
 } else
 {
+	// Show error message if there is an error message.
 	if (!empty($GLOBALS['message'])) { ?>
 	
-    	<div id="message" name="message">
+    	<div id="message">
     		<label><?php echo $GLOBALS['message']; ?></label>
 	    </div>
 <?php } // end if

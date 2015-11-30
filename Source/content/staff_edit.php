@@ -9,8 +9,9 @@
 *----------------------------------------------------------------------------
 */
 
+// if a message is set show message.
 if (isset($message)) { ?>
-<p id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message ?></p><?php ; }?>
+<div id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message ?></div><?php ; }?>
 
 <div>
 <form action="?view=<?php echo $_SESSION['id']; ?>" method="POST">
