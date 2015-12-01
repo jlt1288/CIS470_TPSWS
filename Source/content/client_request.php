@@ -69,7 +69,7 @@ else{
 									$i = 0;
 									foreach ($_POST['candidates'] as $candidate){
 										$staff = new Staff($candidate); ?>
-                                          <th>                    
+                                          <td>                    
                                           <?php if (!empty($staff->picture)){ ?><img src="uploads/pictures/<?php echo $staff->picture; ?>" /><br /><?php } // end if?>
                                           <label><?php echo $staff->Fname . " " . $staff->Lname; ?></label><br />
                                           <label>Experience: <?php echo $staff->experience; ?> Year(s)</label><br />
@@ -77,7 +77,7 @@ else{
                                           <label>Desired Salary: $<?php echo $staff->salary; ?></label><br />
                                           <?php if (!empty($staff->resume)) { ?><a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">View Resume</a><br /><?php } // end if ?>
                                           <input type="checkbox" id="candidates[]" name="candidates[]" onchange="selectCandidate(this)" value="<?php echo $staff->id; ?>" checked/>
-                                          </th>
+                                          </td>
 								<?php $i++; }// end for
 							}// end if?>
                     </tr>
