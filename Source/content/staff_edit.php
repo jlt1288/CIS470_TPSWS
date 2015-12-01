@@ -18,8 +18,9 @@ if (isset($message)) { ?>
 	<input type="submit" id="submit" name="submit" value="View Profile" />
 </form>
 </div>
-<?php if (isset($staff->picture)){ ?>
-<img id="pic" name="pic" src="uploads/pictures/<?php echo $staff->picture; ?>" /> <?php } ?>
+<?php if (isset($staff->picture) && !empty($staff->picture) && file_exists("uploads/pictures/" . $staff->picture)){ ?>
+	<img id="pic" name="pic" src="uploads/pictures/<?php echo $staff->picture; ?>" />
+<?php } ?>
 <form method="POST" action="<?php $_SERVER["PHP_SELF"]; ?>?edit" enctype="multipart/form-data">
     <input type="hidden" name="type" value="picture" />
     <input type="file" name="picture" id="picture" required/>

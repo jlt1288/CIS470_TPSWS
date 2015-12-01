@@ -46,7 +46,7 @@
 			
 			// Run query to find if the username/password combination exists.
 			
-			$sql = "SELECT * FROM user WHERE userID='$id'";
+			$sql = "SELECT * FROM users WHERE userID='$id'";
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
 			if ( mysqli_num_rows( $result ) === 0 ){
@@ -71,7 +71,7 @@
 			
 			// Run query to find if the username/password combination exists.
 			// TODO: Change table, values, and variables to be in line with the database.
-			$sql = "SELECT * FROM user WHERE " . (($type === "id") ? "userID" : "userName") . "= '$user' AND userPassword = '$pass'";
+			$sql = "SELECT * FROM users WHERE " . (($type === "id") ? "userID" : "userName") . "= '$user' AND userPassword = '$pass'";
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
 			if ( mysqli_num_rows( $result ) === 0 ){
@@ -102,7 +102,7 @@
 			// Connect to the database for further use.
 			require( 'scripts/database_admin.php' );
 
-			$query = "UPDATE user SET user" . $var ."='$value' WHERE userID='$this->id'";
+			$query = "UPDATE users SET user" . $var ."='$value' WHERE userID='$this->id'";
 			
 			if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) ) === 0){
 				return true;
@@ -122,12 +122,12 @@
 			require( 'scripts/database_admin.php' );
 			
 			// Run query to find if the username/password combination exists.
-			$query = "SELECT * FROM user WHERE userEmail = '$email'";
+			$query = "SELECT * FROM users WHERE userEmail = '$email'";
 	
 			if ($connection->query($query) or die('Error: ' . mysqli_error($connection))===0){
 		
 				// TODO: Email new password to email address.				
-				$query = "UPDATE user SET userPassword='$pass' WHERE userEmail='$email'";
+				$query = "UPDATE users SET userPassword='$pass' WHERE userEmail='$email'";
 				
 				if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) ) === 0){
 					return true;	
@@ -232,7 +232,7 @@
 			// Connect to the database for further use.
 			require_once('scripts/database.php');
 			
-			$sql = "SELECT * FROM user WHERE userName='$employee_id'";
+			$sql = "SELECT * FROM users WHERE userName='$employee_id'";
 			
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
@@ -338,6 +338,61 @@
 				return $results;
 			}	
 		}
+		
+		// This function is used to get the request associated with the approval code.
+		public static function getRequest($approval_code, $access)
+		{
+			//connect to db server; select database
+			require('scripts/database.php');
+			
+			if ($access === "manager")
+			{
+				$query = "SELECT * FROM staffrequest WHERE approvalNumber='$approval_code'";
+			}
+			elseif ($access === "client")
+			{
+				$id = $_SESSION['id'];
+				$query = "SELECT * FROM staffrequest WHERE userID='$id' AND approvalNumber='$approval_code'";
+			}
+						
+			if (!$rs = $connection->query($query))
+			{
+				return false;
+			}
+
+			return ($rs->num_rows > 0) ? new Request($rs->fetch_array()) : false ;			
+		}
+		
+		// This function is used to create a new request.
+		public static function create($id, $workType, $experience, $education, $salary, $zip, $distance, $potential_candidates)
+		{
+			$random_hash = md5(uniqid(rand(), true));			
+			$app_num =  strtoupper(substr($random_hash, (strlen($random_hash) % 2), 10));
+			
+			//connect to db server; select database
+			require('scripts/database_admin.php');
+			$status = "VALID";
+			$date = date('Y-m-d');
+			
+			$query = "INSERT INTO staffrequest (userID, workType, experience, education, salary, zipcode, distance, status, dateOpened, approvalNumber) VALUES ('$id', '$workType', '$experience', '$education', '$salary', '$zip', '$distance', '$status', '$date', '$app_num')";			
+			$connection->query($query);
+						
+			if (!$request = Request::getRequest($app_num, $_SESSION['access']))
+			{
+				return false;		
+			}
+			
+			foreach ($potential_candidates as $candidate)
+			{
+				//connect to db server; select database
+				require('scripts/database_admin.php');
+					
+				$query = "INSERT INTO candidate (staffRequestID, staffID) VALUES ($request->id, $candidate)";
+				$connection->query($query);		
+			}	
+				
+			return $app_num;	
+		}
 	}
 	
 	class Paginator {
@@ -422,61 +477,6 @@
 			$html       .= '</ul>';
 		
 			return $html;
-		}
-		
-		// This function is used to get the request associated with the approval code.
-		public static function getRequest($approval_code, $access)
-		{
-			//connect to db server; select database
-			require('scripts/database.php');
-			
-			if ($access === "manager")
-			{
-				$query = "SELECT * FROM staffrequest WHERE approvalNumber='$approval_code'";
-			}
-			elseif ($access === "client")
-			{
-				$id = $_SESSION['id'];
-				$query = "SELECT * FROM staffrequest WHERE userID='$id' AND approvalNumber='$approval_code'";
-			}
-						
-			if (!$rs = $connection->query($query))
-			{
-				return false;
-			}
-
-			return ($rs->num_rows > 0) ? new Request($rs->fetch_array()) : false ;			
-		}
-		
-		// This function is used to create a new request.
-		public static function create($id, $workType, $experience, $education, $salary, $zip, $distance, $potential_candidates)
-		{
-			$random_hash = md5(uniqid(rand(), true));			
-			$app_num =  strtoupper(substr($random_hash, (strlen($random_hash) % 2), 10));
-			
-			//connect to db server; select database
-			require('scripts/database_admin.php');
-			$status = "VALID";
-			$date = date('Y-m-d');
-			
-			$query = "INSERT INTO staffrequest (userID, workType, experience, education, salary, zipcode, distance, status, dateOpened, approvalNumber) VALUES ('$id', '$workType', '$experience', '$education', '$salary', '$zip', '$distance', '$status', '$date', '$app_num')";			
-			$connection->query($query);
-						
-			if (!$request = Client::getRequest($id, $app_num))
-			{
-				return false;		
-			}
-			
-			foreach ($potential_candidates as $candidate)
-			{
-				//connect to db server; select database
-				require('scripts/database_admin.php');
-					
-				$query = "INSERT INTO candidate (staffRequestID, staffID) VALUES ($request->id, $candidate)";
-				$connection->query($query);		
-			}	
-				
-			return $app_num;	
 		}
 	}
 	

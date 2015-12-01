@@ -38,7 +38,7 @@ if ($_SESSION['id'] === $id) { ?>
 </form>
 </div><?php } // end if
 
- if (isset($staff->picture)){ ?>
+ if (isset($staff->picture) && !empty($staff->picture) && file_exists("uploads/pictures/" . $staff->picture)){ ?>
 <img id="pic" name="pic" src="uploads/pictures/<?php echo $staff->picture; ?>" /> <?php } ?>
 	<div id="availability" name="availability">
     	<label>Availability:</label><br />
@@ -69,7 +69,7 @@ if ($_SESSION['id'] === $id) { ?>
         <label id="salary" name="salary"><?php echo $staff->salary; ?></label>
     </div>
     
-    <?php if (isset($staff->resume) && !empty($staff->resume)){ ?>
+    <?php if (isset($staff->resume) && !empty($staff->resume) && file_exists("uploads/resumes/" . $staff->resume)){ ?>
     <div>
     	<label>Resume:</label><br />
         <a href="uploads/resumes/<?php echo $staff->resume; ?>" target="_blank">Download</a>
