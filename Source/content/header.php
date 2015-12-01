@@ -29,7 +29,7 @@
             	<form action="?view" method="POST">
                 	<input type="hidden" id="access" name="access" value="client" />
                     <label>Search: </label>
-                    <input id="approval_code" name="approval_code" placeholder="Search for request." />
+                    <input id="approval_code" name="approval_code" placeholder="Search for request." required/>
                     <input type="submit" id="search" name="search" value="Search" />
                 </form>
             </div>
@@ -47,7 +47,7 @@
             	<form action="?view" method="POST">
                 	<input type="hidden" id="access" name="access" value="staff" />
                     <label>Search: </label>
-                    <input id="employee_id" name="employee_id" placeholder="Search for employee." />
+                    <input id="employee_id" name="employee_id" placeholder="Search for employee." required/>
                     <input type="submit" id="search" name="search" value="Search" />
                 </form>
             </div>
