@@ -7,11 +7,11 @@ function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
     array_multisort($sort_col, $dir, $arr);
 }
 ?>
-<p style="margin:0px; padding-top:2.5px;">
-        <form action="<?php echo htmlentities($_SERVER['PHP_SELF'] . "?request"); ?>" method="post" name="zipform">
+<h3 style= "margin-left: 20px; margin-top: -1em; padding-top: 15px; color: #202020;"><u>Submit Request</u></h3>
+<p style="margin-top:20px;">
+        <form action="<?php echo htmlentities($_SERVER['PHP_SELF'] . "?request"); ?>" method="post" name="zipform" style="margin-left: 20px;">
             <label>Enter your ZIP Code: <input type="text" name="zipcode" size="6" maxlength="5" value="<?php echo $_POST['zipcode']; ?>" /></label>
-            <br />
-            <label>Select a distance in miles from this point:</label>
+            <label>&nbsp Select a distance (in miles) from this point:</label>
             <select name="distance">
                 <option<?php if($_POST['distance'] == "5") { echo " selected=\"selected\""; } ?>>5</option>
                 <option<?php if($_POST['distance'] == "10") { echo " selected=\"selected\""; } ?>>10</option>
@@ -19,17 +19,16 @@ function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
                 <option<?php if($_POST['distance'] == "50") { echo " selected=\"selected\""; } ?>>50</option>
                 <option<?php if($_POST['distance'] == "100") { echo " selected=\"selected\""; } ?>>100</option>
             </select>
-            <br />
-            <input type="submit" name="submit" value="Submit" />
+            <input type="submit" style="margin-left: 20px;" name="submit" value="Submit" />
         </form>
         <br />
         <?php
 			if(isset($_POST['submit'])) {
 				if(!preg_match('/^[0-9]{5}$/', $_POST['zipcode'])) {
-					echo "<p><strong>You did not enter a properly formatted ZIP Code.</strong> Please try again.</p>\n";
+					echo "<p><strong>&nbsp&nbsp&nbsp You did not enter a properly formatted ZIP Code.</strong> Please try again.</p>\n";
 				}
 				elseif(!preg_match('/^[0-9]{1,3}$/', $_POST['distance'])) {
-					echo "<p><strong>You did not enter a properly formatted distance.</strong> Please try again.</p>\n";
+					echo "<p><strong>&nbsp&nbsp&nbsp You did not enter a properly formatted distance.</strong> Please try again.</p>\n";
 				}
 				else {
 					//connect to db server; select database
@@ -59,8 +58,8 @@ function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
 							
 							//display information about starting point
 							//provide max and min latitudes / longitudes
-							echo "<table class=\"bordered\" cellspacing=\"0\">\n";
-							echo "<tr><th>City</th><th>State</th><th>Lat</th><th>Lon</th><th>Max Lat (N)</th><th>Min Lat (S)</th><th>Max Lon (E)</th><th>Min Lon (W)</th></tr>\n";
+							echo "<table id=\"resultTable\" class=\"bordered\">\n";
+							echo "<tr><td><b>City</b></td><td><b>State</b></td><td><b>Lat</b></td><td><b>Lon</b></td><td><b>Max Lat (N)</b></td><td><b>Min Lat (S)</b></td><td><b>Max Lon (E)</b></td><td><b>Min Lon (W)</b></td></tr>\n";
 							echo "<tr><td>$row[city]</td><td>$row[state]</td><td>$lat1</td><td>$lon1</td><td>$latN</td><td>$latS</td><td>$lonE</td><td>$lonW</td></tr>\n";
 							echo "</table>\n<br />\n";
 							
@@ -75,8 +74,8 @@ function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
 							}
 							else {
 								//output all matches to screen
-								echo "<table class=\"bordered\" cellspacing=\"0\">\n";
-								echo "<tr><th>City</th><th>State</th><th>ZIP Code</th><th>Latitude</th><th>Longitude</th><th>Miles, Point A To B</th></tr>\n";
+								echo "<div id=\"resultsDiv\"><table id=\"resultTable2\" class=\"bordered\">\n";
+								echo "<tr><td><b>City</b></td><td><b>State</b></td><td><b>ZIP Code</b></td><td><b>Latitude</b></td><td><b>Longitude</b></td><td><b>Miles, Point A To B</b></td></tr>\n";
 								$tmp = array();
 								$i = 0;
 								
@@ -93,12 +92,12 @@ function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
 								array_sort_by_column($tmp, 'distance');
 								
 								foreach($tmp as $data) {
-									echo "<tr><td>$data[city]</td><td>$data[state]</td><td>$data[zip_code]</td><td>$data[latitude]</td><td>$data[longitude]</td><td>$data[distance]</td></tr>\n";	
+									echo "<tr><td>$data[city]</td><td>$data[state]</td><td>$data[code]</td><td>$data[latitude]</td><td>$data[longitude]</td><td>$data[distance]</td></tr>\n";	
 								}
 								while($row = mysqli_fetch_array($rs)) {
 									
 								}
-								echo "</table>\n<br />\n";
+								echo "</table></div>\n<br />\n";
 							}
 						}
 					}

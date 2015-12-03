@@ -1,4 +1,4 @@
 <?php
-	$student = 'jthomps4';
-	//$student = 'coliverm';
+	//$student = 'jthomps4';
+	$student = 'coliverm';
 ?>
