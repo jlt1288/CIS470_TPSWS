@@ -15,10 +15,10 @@
 		<p style="float: left; margin: 0px; margin-left: 80px; margin-top: -6px; font-size: 48px; color:#202020;">Taylor's Professional Services</p>   
 		<?php if (isset($_SESSION['id'])) { ?>
         	<div id="logout" style="float: right; margin-top: 20px; font-size: 18px;">
-				<a id="home_link" href="members_area.php">Home</a>
+				<a class="button" id="home_link" href="members_area.php">Home</a>
 			</div>     
 	        <div id="logout" style="float: right; margin-right:12px; margin-top: 20px; font-size: 18px;">
-				<a id="logout_link" href="<?php $_SERVER["PHP_SELF"];?>?logout">Logout</a>
+				<a class="button" id="logout_link" href="<?php $_SERVER["PHP_SELF"];?>?logout">Logout</a>
 			</div>
 		<?php }// end if ?>
         

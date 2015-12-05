@@ -25,7 +25,7 @@ else{
             	<option value="Scientific" <?php echo (($_POST['workType'] === "Scientific") ? "selected" : ""); ?>>Scientific</option>
 	        </select>
     	    <label style="margin-left: 65px;" >Experience:</label>
-        	<input type="number" id="experience" name="experience" min="1" max="99" value="<?php echo $_POST['experience']; ?>" required/><br />
+        	<input style="max-width: 100px;" type="number" id="experience" name="experience" min="1" max="99" value="<?php echo $_POST['experience']; ?>" required/><br />
 		</div>
 		<div style="margin-bottom: 5px;">
 	        <label>Education:</label>

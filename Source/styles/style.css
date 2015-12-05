@@ -229,7 +229,7 @@ html, body
 
 #managerBox
 {
-	height: 85%;
+	height: 80%;
 	width:920px;
 	margin-left: 20px;
 	margin-top: 20px;
@@ -238,11 +238,6 @@ html, body
 	padding: 15px;
 	overflow-y: scroll;
 	background: #E0E0E0;
-}
-
-#links
-{
-	appearance:normal;
 }
 
 .image
@@ -258,5 +253,33 @@ html, body
 	margin-top: -13px;
 	padding-left: 0px;
 	z-index:5;
+}
+
+.button {
+  font: bold 14px Arial;
+  text-decoration: none;
+  background-color: #202020;
+  border-radius: 5px;
+  color: #E0E0E0;
+  padding: 4px 8px 4px 8px;
+  border-top: 1px solid #202020;
+  border-right: 1px solid #202020;
+  border-bottom: 1px solid #202020;
+  border-left: 1px solid #202020;
+}
+
+#page
+{
+	float:left;
+	border:none;
+	background: #E0E0E0;
+}
+
+.pages
+{
+	list-style: none;
+	width: 18%;
+    margin: auto;
+	margin-top: 15px;
 }
 

@@ -328,7 +328,7 @@
 			
 			$paginator = new Paginator($query);
 								
-			if(!$results = $paginator->getData( $page, 5 )) {
+			if(!$results = $paginator->getData( $page, 10 )) {
 				$GLOBALS['message'] = "No new staffing requests at this time.";
 				return false;	
 			}
@@ -466,8 +466,8 @@
 			$html       = '<ul class="' . $list_class . '">';
 			
 			if ( $start > 1 ) {
-				$html   .= '<li><input class="active" type="submit" id="page" name="page" value="1" /></li>';
-				$html   .= '<li class="disabled"><span>...</span></li>';
+				$html   .= '<li class="active"><input type="submit" id="page" name="page" value="1" /></li>';
+				$html   .= '<li class="disabled"><label id="page" name="page">...</label></li>';
 			}
 		
 			for ( $i = $start ; $i <= $end; $i++ ) {
@@ -476,8 +476,8 @@
 			}
 		
 			if ( $last > $end ) {
-				$html   .= '<li class="disabled"><span>...</span></li>';
-				$html   .= '<li><input class="active" type="submit" id="page" name="page" value="' . $last . '" /></li>';
+				$html   .= '<li class="disabled"><label id="page" name="page">...</label></li>';
+				$html   .= '<li class="active"><input type="submit" id="page" name="page" value="' . $last . '" /></li>';
 			}
 		
 			$html       .= '</ul>';
