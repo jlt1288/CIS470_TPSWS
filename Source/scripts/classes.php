@@ -328,13 +328,13 @@
 			
 			$paginator = new Paginator($query);
 								
-			if(!$results = $paginator->getData( $page, 25 )) {
+			if(!$results = $paginator->getData( $page, 5 )) {
 				$GLOBALS['message'] = "No new staffing requests at this time.";
 				return false;	
 			}
 			else
 			{
-				$results->links = $paginator->createLinks($page, 'pages');
+				$results->links = $paginator->createLinks(2, 'pages');
 				return $results;
 			}	
 		}
@@ -466,7 +466,7 @@
 			$html       = '<ul class="' . $list_class . '">';
 			
 			if ( $start > 1 ) {
-				$html   .= '<li><input type="submit" id="page" name="page" value="1" /></li>';
+				$html   .= '<li><input class="active" type="submit" id="page" name="page" value="1" /></li>';
 				$html   .= '<li class="disabled"><span>...</span></li>';
 			}
 		
@@ -475,9 +475,9 @@
 				$html   .= '<li class="' . $class . '"><input '. (($class == "active") ? "" : "disabled" ). ' type="submit" id="page" name="page" value="' . $i . '" /></li>';
 			}
 		
-			if ( $end < $last ) {
+			if ( $last > $end ) {
 				$html   .= '<li class="disabled"><span>...</span></li>';
-				$html   .= '<li><input type="submit" id="page" name="page" value="' . $last . '" /></li>';
+				$html   .= '<li><input class="active" type="submit" id="page" name="page" value="' . $last . '" /></li>';
 			}
 		
 			$html       .= '</ul>';
@@ -578,7 +578,7 @@
 				}
 				else
 				{
-					$results->links = $paginator->createLinks($page, 'pages');
+					$results->links = $paginator->createLinks(2, 'pages');
 					return $results;
 				}						
 			}
