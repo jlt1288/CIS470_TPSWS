@@ -328,7 +328,7 @@
 			
 			$paginator = new Paginator($query);
 								
-			if(!$results = $paginator->getData( $page, 25 )) {
+			if(!$results = $paginator->getData( $page, 10 )) {
 				$GLOBALS['message'] = "No new staffing requests at this time.";
 				return false;	
 			}
@@ -463,7 +463,7 @@
 			$start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
 			$end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
 		
-			$html       = '<ul class="' . $list_class . '">';
+			$html       = '<ul align="center" class="' . $list_class . '">';
 			
 			if ( $start > 1 ) {
 				$html   .= '<li><input class="active" type="submit" id="page" name="page" value="1" /></li>';
