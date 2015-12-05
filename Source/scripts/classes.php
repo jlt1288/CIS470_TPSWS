@@ -466,7 +466,7 @@
 			$html       = '<ul align="center" class="' . $list_class . '">';
 			
 			if ( $start > 1 ) {
-				$html   .= '<li><input class="active" type="submit" id="page" name="page" value="1" /></li>';
+				$html   .= '<li class="active"><input type="submit" id="page" name="page" value="1" /></li>';
 				$html   .= '<li class="disabled"><span>...</span></li>';
 			}
 		
