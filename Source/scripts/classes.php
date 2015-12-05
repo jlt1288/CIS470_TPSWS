@@ -467,7 +467,7 @@
 			
 			if ( $start > 1 ) {
 				$html   .= '<li class="active"><input type="submit" id="page" name="page" value="1" /></li>';
-				$html   .= '<li class="disabled"><span>...</span></li>';
+				$html   .= '<li class="disabled"><label>...</label></li>';
 			}
 		
 			for ( $i = $start ; $i <= $end; $i++ ) {
@@ -476,7 +476,7 @@
 			}
 		
 			if ( $last > $end ) {
-				$html   .= '<li class="disabled"><span>...</span></li>';
+				$html   .= '<li class="disabled"><label>...</label></li>';
 				$html   .= '<li class="active"><input type="submit" id="page" name="page" value="' . $last . '" /></li>';
 			}
 		
