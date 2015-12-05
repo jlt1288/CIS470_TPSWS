@@ -432,17 +432,23 @@
 		    
 			$rs = $connection->query( $query );
 
-		    while ( $row = $rs->fetch_assoc() ) {
-        		$results[]  = $row;
-		    }
+			if ($rs->num_rows > 0)
+			{
+			
+				while ( $row = $rs->fetch_assoc() ) {
+					$results[]  = $row;
+				}
+  
+				$result         = new stdClass();
+				$result->page   = $this->_page;
+				$result->limit  = $this->_limit;
+				$result->total  = $this->_total;
+				$result->data   = $results;
 
-		    $result         = new stdClass();
-		    $result->page   = $this->_page;
-		    $result->limit  = $this->_limit;
-		    $result->total  = $this->_total;
-		    $result->data   = $results;
-
-		    return $result;
+				return $result;
+			} else {
+				return false;
+			}
 		}
 		
 		// This function is used to create a links list based on this query.

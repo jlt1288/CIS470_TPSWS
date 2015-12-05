@@ -20,12 +20,7 @@ if (isset($message)) { ?> <div id="message" align="center" style="margin:0px; pa
 	</div><!-- End of View Profile -->
     
 	<div style="float: left;">
-		<?php if (isset($staff->picture) && !empty($staff->picture) && file_exists("uploads/pictures/" . $staff->picture)){ ?>
-        	<img class="image" id="pic" name="pic" src="uploads/pictures/<?php echo $staff->picture; ?>" />
-		<?php } ?>
-		<?php if (isset($staff->picture) && empty($staff->picture)){ ?>
-        	<img class="image" id="pic" name="pic" src="uploads/pictures/noperson.png<?php echo $staff->picture; ?>" />
-		<?php } ?>
+		<img class="image" id="pic" name="pic" src="<?php echo ((!empty($staff->picture) && file_exists("uploads/pictures/" . $staff->picture)) ? 'uploads/pictures/' . $staff->picture : "styles/noperson.png"); ?>" /><br />
 		<form style="margin-top:5px;" method="POST" action="<?php $_SERVER["PHP_SELF"]; ?>?edit" enctype="multipart/form-data">
 		    <input type="hidden" name="type" value="picture" />
 		    <input type="file" name="picture" id="picture" required/><br />

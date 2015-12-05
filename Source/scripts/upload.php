@@ -9,87 +9,75 @@
 *----------------------------------------------------------------------------
 */
 
-// Determine what item we're triyng to upload.
-if (isset($_POST['type']) && $_POST['type'] === "picture" && !empty($_FILES))
+function upload()
 {
-	// Looks like we're trying to upload a picture.
+	$max_width = 256;
+	$max_height = 256;
 	
-	$target_dir = "uploads/pictures/";
-	$imageFileType = pathinfo($target_dir . basename($_FILES["picture"]["name"]),PATHINFO_EXTENSION);
-	$target_filename = md5(uniqid(basename($_FILES["picture"]["name"]), true)) . '.' . $imageFileType;
-	$target_file = $target_dir . $target_filename;
-	$uploadOk = 1;
+	// Determine what item we're triyng to upload.
+	if (isset($_POST['type']) && $_POST['type'] === "picture" && !empty($_FILES))
+	{
+		// Looks like we're trying to upload a picture.
 	
-	// Check if image file is a actual image or fake image
-	$check = getimagesize($_FILES["picture"]["tmp_name"]);
-	list($width, $height, $type, $attr) = getimagesize($_FILES["picture"]["tmp_name"]);
-	if($check !== false) {
-		$message = "File is an image - " . $check["mime"] . ".";
-		$uploadOk = 1;
-	} else {
-		$message = "File is not an image.";
-		$uploadOk = 0;
-	}
-	// Check if file already exists
-	if (file_exists($target_file)) {
-		$message = "Sorry, file already exists.";
-		$uploadOk = 0;
-	}
-	// Check file size
-	if ($_FILES["picture"]["size"] > 500000) {
-		$message = "Sorry, your file is too large.";
-		$uploadOk = 0;
-	}
-	// Allow certain file formats
-	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-	&& $imageFileType != "gif" ) {
-		$message = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-		$uploadOk = 0;
-	}
-	// Check if $uploadOk is set to 0 by an upload
-	if ($uploadOk == 0) {
-		$message = "Sorry, your file was not uploaded.";
-	// if everything is ok, try to upload file
-	} else {
+		$target_dir = "uploads/pictures/";
+		$imageFileType = pathinfo($target_dir . basename($_FILES["picture"]["name"]),PATHINFO_EXTENSION);
+		$target_filename = md5(uniqid(basename($_FILES["picture"]["name"]), true)) . '.' . $imageFileType;
+		$target_file = $target_dir . $target_filename;
+	
+		list($width, $height, $type, $attr) = getimagesize($_FILES["picture"]["tmp_name"]);
+		// Check width and height to make sure they are within the limitation.
+		if ($width > $max_width)
+		{
+			return array(false, "The width of the picture cannot exceed 256 pixels.<br>Please reduce the image and try again.");
+		}
+	
+		if ($height > $max_height)
+		{
+			return array(false, "The height of the picture cannot exceed 256 pixels.<br>Please reduce the image and try again.");
+		}
+	
+		// Check if file already exists
+		if (file_exists($target_file)) {
+			return array(false, "Sorry, file already exists.");
+		}
+		// Check file size
+		if ($_FILES["picture"]["size"] > 500000) {
+			return array(false, "Sorry, your file is too large.");
+		}
+		// Allow certain file formats
+		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+		&& $imageFileType != "gif" ) {
+			return array(false, "Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+		}
+		// if everything is ok, try to upload file
 		if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file)) {
-			$message = "The " . $_POST['type'] . " was successfully uploaded.";
+			return array(true, "The " . $_POST['type'] . " was successfully uploaded.", $target_filename);
 		} else {
-			$message = "Sorry, there was an error uploading your file.";
+			return array(false, "Sorry, there was an error uploading your file.");
 		}
-	}
-}elseif (isset($_POST['type']) && $_POST['type'] === "resume" && !empty($_FILES))
-{
-	// Looks like we're trying to upload a resume.
+	}elseif (isset($_POST['type']) && $_POST['type'] === "resume" && !empty($_FILES))
+	{
+		// Looks like we're trying to upload a resume.
 	
-	$target_dir = "uploads/resumes/";
-	$fileType = pathinfo($target_dir . basename($_FILES["resume"]["name"]),PATHINFO_EXTENSION);
-	$target_filename = md5(uniqid(basename($_FILES["resume"]["name"]), true)) . '.' . $fileType;
-	$target_file = $target_dir . $target_filename;
-	$uploadOk = 1;
+		$target_dir = "uploads/resumes/";
+		$fileType = pathinfo($target_dir . basename($_FILES["resume"]["name"]),PATHINFO_EXTENSION);
+		$target_filename = md5(uniqid(basename($_FILES["resume"]["name"]), true)) . '.' . $fileType;
+		$target_file = $target_dir . $target_filename;
 	
-	// Check if file already exists
-	if (file_exists($target_file)) {
-		$message = "Sorry, file already exists.";
-		$uploadOk = 0;
-	}
+		// Check if file already exists
+		if (file_exists($target_file)) {
+			return array(false, "Sorry, file already exists.");
+		}
 	
-	// Check if $uploadOk is set to 0 by an upload
-	if ($uploadOk == 0) {
-		$message = "Sorry, your file was not uploaded.";
-	// if everything is ok, try to upload file
-	} else {
 		if (move_uploaded_file($_FILES["resume"]["tmp_name"], $target_file)) {
-			$message = "The " . $_POST['type'] . " was successfully uploaded.";
+			return array(true, "The " . $_POST['type'] . " was successfully uploaded.", $target_filename);
 		} else {
-			$message = "Sorry, there was an error uploading your file.";
+			return array(false, "Sorry, there was an error uploading your file.");
 		}
 	}
+	else
+	{
+		return array(false, "Unable to verify upload data.");
+	}
 }
-else
-{
-	// Ooops, looks like someone is trying to do something naughty.
-	
-	$message = "Unable to verify upload data.";
-}
-
 ?> 
