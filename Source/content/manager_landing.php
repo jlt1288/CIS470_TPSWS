@@ -13,19 +13,19 @@
 if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) { ?>
 	<h3 style= "margin-left: 20px; margin-top: 0px; padding-top: 15px; color: #202020;"><u>View Requests</u></h3>
 	<div id="managerBox">
-	    <table align="center" style="float:left;">
-	    	<tr>
+	   	<table align="center" style="float:left;">
+	   		<tr>
 		   		<td><b>Date Opened</b></td>
         	    <td><b>Status</b></td>
-           		<td><b>Approval Code</b></td>
+       	   		<td><b>Approval Code</b></td>
 				<td><b>View</b></td>
 	       	</tr>
     		<?php 
 			  // iterate through the requests.
 			  for ($i = 0; $i < count ($results->data); $i++) :
-		  
+	  
 				  $request = new Request($results->data[$i]);	?>
-		  
+	  
 				  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
 					  <tr>
 						  <td width="150px"><?php echo $request->dateOpened; ?></td>
@@ -40,11 +40,13 @@ if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) 
 					  </tr>
 				  </form>
 		  <?php endfor; ?>    
-    	</table>
+	   	</table>
 	</div><!-- End of Results Box -->
-    <div id="links" class="links" name="links">
-    	<?php echo $results->links; ?>
-    </div>
+	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+        <div id="links" class="links" name="links">
+    		<?php echo $results->links; ?>
+	    </div>
+	</form>
 <?php } else {
 	// Show error message if there is an error message.
 	if (!empty($GLOBALS['message'])) { ?>	
