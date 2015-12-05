@@ -123,14 +123,14 @@ elseif (isset($_POST['submit']) && (!isset($_GET['forgotpassword']) or !isset($_
 				<?php } else { ?>
 				
 				<h3 style= "margin-left: 55px; margin-top: 15px; color: #E0E0E0;"><u>Recover Password</u></h3>
-				<form id="login" style="margin-top: 26px; margin-left: 27px;" name="forgot" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?forgotpassword">
+				<form id="login" style="margin-top: 40px; margin-left: 27px;" name="forgot" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?forgotpassword">
 					<table>
 						<tr>
 							<th><label>Email:</label></th>
 							<th><input id="email" name="email" type="email" required></th>
 						</tr>
 					</table>  
-					<table style= "margin-left: 50px; margin-top: 10px;">
+					<table style= "margin-left: 60px; margin-top: 10px;">
 						<tr>
 							<th><a href="index.php" class="button">Back</a></th>
 							<th><input type="submit" class="button" style="float: left; margin: 5px;" id="submit" name="submit" value="Send"></th>
