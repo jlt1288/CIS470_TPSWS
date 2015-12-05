@@ -42,6 +42,9 @@ if ($results = Request::getNew((!empty($_POST['page']) ? $_POST['page'] : 1 ))) 
 		  <?php endfor; ?>    
     	</table>
 	</div><!-- End of Results Box -->
+    <div id="links" class="links" name="links">
+    	<?php echo $results->links; ?>
+    </div>
 <?php } else {
 	// Show error message if there is an error message.
 	if (!empty($GLOBALS['message'])) { ?>	

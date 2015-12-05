@@ -41,17 +41,27 @@ if (isset($_POST['type']) && $_POST['type'] !== "info" && $_POST['type'] != "acc
 	
 	// Required for upload purposes.
 	require_once('scripts/upload.php');
-
-	if (isset($target_filename))
+	$results = upload();
+	
+	if ($results[0] === true)
 	{
 		// TODO: Update the database information for the picture.
 		$id = $_SESSION['id'];
 		$type = $_POST['type'];
+		$message = $results[1];
+		$target_filename = $results[2];
+				
 		
 		require_once('scripts/database_admin.php');
 		$query = "UPDATE staff SET $type='$target_filename' WHERE userID=$id";
 		$result = $connection->query($query) or die('Error: ' . mysqli_error( $connection ));
 	}
+	else
+	{
+		$message = $results[1];
+	}
+	
+	$staff->refresh();
 }
 elseif (isset($_POST['type']) && $_POST['type'] === "info")
 {

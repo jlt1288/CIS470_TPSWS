@@ -41,13 +41,7 @@ else
 		</div><!-- End of Edit Profile -->
 	<?php } // end if ?>
 
-	<?php if (isset($staff->picture) && !empty($staff->picture) && file_exists("uploads/pictures/" . $staff->picture)){ ?>
-		<img class="image" id="pic" name="pic" style="float: left;" src="uploads/pictures/<?php echo $staff->picture; ?>" />
-	<?php } ?>
-    
-	<?php if (isset($staff->picture) && empty($staff->picture)){ ?>
-		<img class="image" id="pic" name="pic" style="float: left;" src="uploads/pictures/noperson.png<?php echo $staff->picture; ?>" />
-	<?php } ?>
+	<img class="image" id="pic" name="pic" style="float: left" src="<?php echo ((!empty($staff->picture) && file_exists("uploads/pictures/" . $staff->picture)) ? 'uploads/pictures/' . $staff->picture : "styles/noperson.png"); ?>" />
 	
     <div id="infoBox">
 		<div id="availability" name="availability">
