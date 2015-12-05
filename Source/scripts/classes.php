@@ -463,7 +463,7 @@
 			$start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
 			$end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
 		
-			$html       = '<ul align="center" class="' . $list_class . '">';
+			$html       = '<ul class="' . $list_class . '">';
 			
 			if ( $start > 1 ) {
 				$html   .= '<li class="active"><input type="submit" id="page" name="page" value="1" /></li>';
