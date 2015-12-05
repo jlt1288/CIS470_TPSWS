@@ -10,14 +10,15 @@
 */
 
 // if a message is set show message.
-/*
 if (isset($message)) { ?><div id="message" align="center" style="margin:0px; padding-top:2.5px;"><?php echo $message; ?></div> <?php } // end if
-*/
+
+// if no staff is set, show error message.
+if (empty($staff)) echo "Error staff is nil.";
 
 // Only show if we're a manager and arrived here from a staff request.
 if ($_SESSION['access'] === "manager" && (!empty($_POST['approval_code'])))
 {?>
-	<div id="back_request" style="float: right; margin-right: 40px; margin-top: 17px;">
+	<div id="back_request" style="float: right; margin-right: 15px; margin-top: 12px;">
         <form action="?view" method="POST">
             <input type="hidden" id="access" name="access" value="client" />
             <input type="hidden" id="search" name="search" value="search" />
@@ -26,14 +27,9 @@ if ($_SESSION['access'] === "manager" && (!empty($_POST['approval_code'])))
 		</form>
 	</div>	
 <?php } // end if ?>
-<h3 style= "margin-left: 20px; margin-top: 0px; padding-top: 15px; color: #202020;"><u>Staff</u></h3>
-<?php // if no staff is set, show error message.
-if (empty($staff)) { ?><div id="message" style="margin:0px; margin-left: 20px; font-size: 18px; padding:5px; color:red"><b><?php echo "No results match that criteria."; ?></b></div> <?php } 
-else
-{?>
-<div id="staffView">
+<div id="view">
 	<?php if ($_SESSION['id'] === $id) { // Only show if we're the staff member associated with this profile. ?>
-		<div style="margin-bottom: 10px;">
+		<div>
 			<form action="?edit" method="POST">
 				<input type="hidden" id="edit" name="edit" />
 				<input type="submit" id="submit" name="submit" value="Edit Profile" />
@@ -41,14 +37,8 @@ else
 		</div><!-- End of Edit Profile -->
 	<?php } // end if ?>
 
-	<?php if (isset($staff->picture) && !empty($staff->picture) && file_exists("uploads/pictures/" . $staff->picture)){ ?>
-		<img class="image" id="pic" name="pic" style="float: left;" src="uploads/pictures/<?php echo $staff->picture; ?>" />
-	<?php } ?>
+	<img class="image" src="<?php echo ((!empty($staff->picture) && file_exists($staff->picture)) ? 'uploads/pictures/' . $staff->picture : "styles/noperson.png"); ?>" />
     
-	<?php if (isset($staff->picture) && empty($staff->picture)){ ?>
-		<img class="image" id="pic" name="pic" style="float: left;" src="uploads/pictures/noperson.png<?php echo $staff->picture; ?>" />
-	<?php } ?>
-	
     <div id="infoBox">
 		<div id="availability" name="availability">
     		<label><b><u>Availability:</u></b></label><br />
@@ -87,4 +77,3 @@ else
 	   	<?php } ?>
 	</div><!-- End of Information Box -->
 </div><!-- End of View -->
-<?php } ?>
