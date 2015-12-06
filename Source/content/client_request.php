@@ -25,7 +25,7 @@ else{
             	<option value="Scientific" <?php echo (($_POST['workType'] === "Scientific") ? "selected" : ""); ?>>Scientific</option>
 	        </select>
     	    <label style="margin-left: 65px;" >Experience:</label>
-        	<input style="max-width: 100px;" type="number" id="experience" name="experience" min="1" max="99" value="<?php echo $_POST['experience']; ?>" required/><br />
+        	<input style="max-width: 100px;" type="number" id="experience" name="experience" min="1" max="99" step="1" value="<?php echo $_POST['experience']; ?>" required/><br />
 		</div>
 		<div style="margin-bottom: 5px;">
 	        <label>Education:</label>
@@ -35,10 +35,10 @@ else{
     	        <option value="2" <?php echo (($_POST['education'] === "2") ? "selected" : ""); ?>>College</option>
 	        </select>
     	    <label style="margin-left: 90px;">Salary:</label>
-	        <input type="text" pattern="^[1-9]\d*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $_POST['salary']; ?>" required/><br />
+	        <input type="text" placeholder="0.00" pattern="^[1-9]\d*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $_POST['salary']; ?>" required title="Please input the salary in the correct format: 0.00" x-moz-errormessage="Please input the salary in the correct format: 0.00"/><br />
 		</div>
     	    <label>Zip Code:</label>
-        	<input type="text" pattern="[0-9]{5}" id="zip" name="zip" value="<?php echo $_POST['zip']; ?>" required/>
+        	<input type="text" placeholder="00000" pattern="[0-9]{5}" id="zip" name="zip" value="<?php echo $_POST['zip']; ?>" required title="Please input the zip code in the correct format: 00000" x-moz-errormessage="Please input the zip code in the correct format: 00000" />
 	        <label style="margin-left: 30px;">Search Distance:</label>
     	    <select name="distance">
         	    <option value="5" <?php if($_POST['distance'] == "5") { echo "selected"; } ?>>5</option>
@@ -46,7 +46,7 @@ else{
 	            <option value="25" <?php if($_POST['distance'] == "25") { echo "selected"; } ?>>25</option>
     	        <option value="50" <?php if($_POST['distance'] == "50") { echo "selected"; } ?>>50</option>
         		<option value="100" <?php if($_POST['distance'] == "100") { echo "selected"; } ?>>100</option>
-			</select><br />
+			</select><label> miles</label><br />
     	    <input type="submit" style="margin-top: 5px;" name="search" id="search" value="Search" />
 		</div> <!-- End of Begin Search -->
 

@@ -38,9 +38,9 @@ if (isset($message)) { ?> <div id="message" align="center" style="margin:0px; pa
 			    </div><!-- End of Email -->
     			<div id="password" name="password">
 					<label>Current Password:</label><br />
-			        <input style="margin-bottom:5px;" type="password" title="Field cannot be left blank." pattern="\w+" placeholder="Password" id="current_pwd" name="current_pwd" required><br />
+			        <input style="margin-bottom:5px;" type="password" title="Field cannot be left blank." x-moz-errormessage="Field cannot be left blank." pattern="\w+" placeholder="Password" id="current_pwd" name="current_pwd" required><br />
 			    	<label>Password:</label><br />
-			        <input style="margin-bottom:5px;" placeholder="Password" id="pwd" name="pwd" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"><br />
+			        <input style="margin-bottom:5px;" placeholder="Password" id="pwd" name="pwd" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." x-moz-errormessage="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"><br />
 			    	<label>Confirm Password:</label><br />
 			        <input style="margin-bottom:10px;" title="Please enter the same Password as above." type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" id="confirm_pwd" name="confirm_pwd"><br />
 			    </div><!-- End of Password -->
@@ -68,7 +68,7 @@ if (isset($message)) { ?> <div id="message" align="center" style="margin:0px; pa
 		        <label>State:</label><br />
 		        <select style="margin-bottom:5px;" id="state" name="state" required><option value="0">Choose a state</option><?php echo listStates($staff->state); ?></select><br />
         		<label>Zip Code:</label><br />
-		        <input style="margin-bottom:5px;" type="text" pattern="[0-9]{5}" id="zip" name="zip" value="<?php echo $staff->zip; ?>" required/><br />
+		        <input style="margin-bottom:5px;" type="text" placeholder="12345" pattern="[0-9]{5}" id="zip" name="zip" value="<?php echo $staff->zip; ?>" required title="Please input the zip code in the correct format: 00000" x-moz-errormessage="Please input the zip code in the correct format: 00000" /><br />
             </div><!-- End of Information -->
             
             <div>
@@ -86,7 +86,7 @@ if (isset($message)) { ?> <div id="message" align="center" style="margin:0px; pa
 					<option value="2" <?php echo (($staff->education === "2") ? "selected" : ""); ?>>College</option>
 		        </select><br />
 		        <label>Salary:</label><br />
-		        <input style="margin-bottom:10px;" type="text" pattern="^[1-9]\d*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $staff->salary; ?>" required/>
+		        <input style="margin-bottom:10px;" type="text" placeholder="0.00" pattern="^[1-9]\d*\.[0-9]{2}" id="salary" name="salary" value="<?php echo $staff->salary; ?>" required title="Please input the salary in the correct format: 0.00" x-moz-errormessage="Please input the salary in the correct format: 0.00"/>
 			</div><!-- End of Work Information -->
     
 		    <div id="submit_form">
