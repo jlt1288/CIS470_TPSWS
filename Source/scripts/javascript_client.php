@@ -42,7 +42,7 @@
 				checked -= 1;
 				alert("You may only select three (3) potential candidates per staffing request.");	
 			}
-		}		
+		}
 	</script>
 <?php }
 ?>
