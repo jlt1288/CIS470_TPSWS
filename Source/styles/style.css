@@ -268,18 +268,35 @@ html, body
   border-left: 1px solid #202020;
 }
 
-#page
+.links
 {
-	float:left;
-	border:none;
-	background: #E0E0E0;
+	float:right;
+    position:relative;
+    left:-50%;
+    text-align: center;
+	margin-top: 15px;
 }
 
 .pages
 {
-	list-style: none;
-	width: 18%;
-    margin: auto;
-	margin-top: 15px;
+	left: 50%;
+	position: relative;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+li {
+	float: left;
+}
+
+li input {
+	display:inline-block;
+	background: #E0E0E0;
+	border:none;
 }
 

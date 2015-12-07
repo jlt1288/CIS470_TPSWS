@@ -50,7 +50,7 @@ if (isset($message))
     	      <label><b>Location: </b></label>
         	  <label id="zip" name="zip"><?php echo $request->zip; ?></label><br />
 	          <label><b>Desired Distance: </b></label>
-    	      <label id="distance" name="distance"><?php echo $request->distance; ?></label><br />
+    	      <label id="distance" name="distance"><?php echo $request->distance; ?> miles</label><br />
 	      </div><!-- End of info box -->
       </div><!-- End of ViewRequest Box -->
       

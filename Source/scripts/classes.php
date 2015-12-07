@@ -93,7 +93,7 @@
 		{
 			session_start();
 		    session_destroy();
-		    header("Location:");
+		    header("Location:index.php");
 		}
 		
 		// This function is used to update data for the active user account.
@@ -328,7 +328,7 @@
 			
 			$paginator = new Paginator($query);
 								
-			if(!$results = $paginator->getData( $page, 10 )) {
+			if(!$results = $paginator->getData( $page, 25 )) {
 				$GLOBALS['message'] = "No new staffing requests at this time.";
 				return false;	
 			}
