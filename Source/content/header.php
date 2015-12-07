@@ -18,7 +18,7 @@
 				<a class="button" id="home_link" href="members_area.php">Home</a>
 			</div>     
 	        <div id="logout" style="float: right; margin-right:12px; margin-top: 20px; font-size: 18px;">
-				<a class="button" id="logout_link" href="<?php $_SERVER["PHP_SELF"];?>?logout">Logout</a>
+				<a class="button" id="logout_link" href="<?php echo $_SERVER["PHP_SELF"];?>?logout">Logout</a>
 			</div>
 		<?php }// end if ?>
         
