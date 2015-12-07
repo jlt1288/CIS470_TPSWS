@@ -93,7 +93,7 @@
 		{
 			session_start();
 		    session_destroy();
-		    header("Location:");
+		    header("Location:index.php");
 		}
 		
 		// This function is used to update data for the active user account.
