@@ -22,7 +22,7 @@ if ((isset($_POST['request']) || isset($_GET['request'])) && isset($_POST['submi
 	}
 	else
 	{
-		$message = "The request has been submitted. <div id='approval_code' name='approval_code'>Confirmation Code: " . $app_code . "</div>";	
+		$message = "The request has been submitted.<br />A contract manager will verify the request within 24 hours.<div id='approval_code' name='approval_code'>Confirmation Code: " . $app_code . "</div>";	
 	}
 }
 // Determine if we're trying to search for a request based on approval code.
