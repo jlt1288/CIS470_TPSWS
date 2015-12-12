@@ -8,6 +8,13 @@
 *	Modification Date: 11/30/2015
 *----------------------------------------------------------------------------
 */
+
+/*	
+*	Zip Code Distance Code
+*	Original Author: dougvdotcom
+*	Original Site: https://www.dougv.com/2009/03/getting-all-zip-codes-in-a-given-radius-from-a-known-point-zip-code-via-php-and-mysql/
+*/
+
 	// Use to sort arrays by column name.
 	function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
     	$sort_col = array();
@@ -46,7 +53,7 @@
 			
 			// Run query to find if the username/password combination exists.
 			
-			$sql = "SELECT * FROM users WHERE userID='$id'";
+			$sql = "SELECT * FROM user WHERE userID='$id'";
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
 			if ( mysqli_num_rows( $result ) === 0 ){
@@ -71,7 +78,7 @@
 			
 			// Run query to find if the username/password combination exists.
 			// TODO: Change table, values, and variables to be in line with the database.
-			$sql = "SELECT * FROM users WHERE " . (($type === "id") ? "userID" : "userName") . "= '$user' AND userPassword = '$pass'";
+			$sql = "SELECT * FROM user WHERE " . (($type === "id") ? "userID" : "userName") . "= '$user' AND userPassword = '$pass'";
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
 			if ( mysqli_num_rows( $result ) === 0 ){
@@ -102,7 +109,7 @@
 			// Connect to the database for further use.
 			require( 'scripts/database_admin.php' );
 
-			$query = "UPDATE users SET user" . $var ."='$value' WHERE userID='$this->id'";
+			$query = "UPDATE user SET user" . $var ."='$value' WHERE userID='$this->id'";
 			
 			if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) ) === 0){
 				return true;
@@ -122,12 +129,12 @@
 			require( 'scripts/database_admin.php' );
 			
 			// Run query to find if the username/password combination exists.
-			$query = "SELECT * FROM users WHERE userEmail = '$email'";
+			$query = "SELECT * FROM user WHERE userEmail = '$email'";
 	
 			if ($connection->query($query) or die('Error: ' . mysqli_error($connection))===0){
 		
 				// TODO: Email new password to email address.				
-				$query = "UPDATE users SET userPassword='$pass' WHERE userEmail='$email'";
+				$query = "UPDATE user SET userPassword='$pass' WHERE userEmail='$email'";
 				
 				if ($connection->query($query) or die('Error: ' . mysqli_error( $connection ) ) === 0){
 					return true;	
@@ -232,7 +239,7 @@
 			// Connect to the database for further use.
 			require_once('scripts/database.php');
 			
-			$sql = "SELECT * FROM users WHERE userName='$employee_id'";
+			$sql = "SELECT * FROM user WHERE userName='$employee_id'";
 			
 			$result = $connection->query($sql) or die('Error: ' . mysqli_error($connection));			
 			
